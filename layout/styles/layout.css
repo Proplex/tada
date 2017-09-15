@@ -22,11 +22,11 @@ File: Layout CSS
 
 /* Header
 --------------------------------------------------------------------------------------------------------------- */
-#header{padding:50px 0;}
+#header{padding:20px 0;}
 
 #header #logo{text-align:center;}
 #header #logo *{margin:0; padding:0; line-height:1;}
-#header #logo h1{font-size:42px; letter-spacing:5px; text-transform:uppercase; margin-top: -10px; color:gray}
+#header #logo h1{font-size:30px; letter-spacing:5px; text-transform:uppercase; margin-top: -10px; color:gray}
 #header #logo p{margin-top:-3px; font-size:.9rem; font-style:italic; text-transform:lowercase;}
 
 
@@ -39,6 +39,8 @@ File: Layout CSS
 #pageintro article .heading{margin-bottom:30px; font-size:36px;}
 #pageintro article p:last-of-type{margin-bottom:0;}
 
+#note-div {margin-left:-50%; width: 90%; height: 450px; float: left; border-radius: 25px; background-color: gray;}
+#calendar-div { margin-right:-50%; width: 90%; height: 450px; float: right; border-radius: 25px; background-color: gray;}
 
 /* Content Area
 --------------------------------------------------------------------------------------------------------------- */
@@ -83,19 +85,6 @@ File: Layout CSS
 .sidebar .sdb_holder:last-child{margin-bottom:0;}
 
 
-/* Testimonials
---------------------------------------------------------------------------------------------------------------- */
-#testimonials{}
-#testimonials li{}
-#testimonials li:last-child{margin-bottom:0;}
-#testimonials li div{position:relative; min-height:120px; padding:20px 20px 20px 120px; border-radius:0 35px;}
-#testimonials li img{position:absolute; left:20px;}
-#testimonials li span{margin-bottom:5px;}
-#testimonials li span strong{margin-bottom:5px;}
-#testimonials li span em{font-size:.8rem;}
-#testimonials li blockquote{display:block; position:relative; width:100%; margin:0; padding:0;}
-
-
 /* Logos
 --------------------------------------------------------------------------------------------------------------- */
 #logos{padding:30px 0;}
@@ -109,7 +98,7 @@ File: Layout CSS
 --------------------------------------------------------------------------------------------------------------- */
 #footer{padding:30px 0;}
 
-#footer .title{margin:0 0 50px 0; padding:0; font-size:1.2rem; text-transform:uppercase;}
+#footer .title{margin:0 0 30px 0; padding:0; font-size:1.2rem; text-transform:uppercase;}
 
 #footer .linklist li{display:block; margin-bottom:15px; padding:0 0 15px 0; border-bottom:1px solid;}
 #footer .linklist li:last-child{margin:0; padding:0; border:none;}
@@ -128,7 +117,7 @@ File: Layout CSS
 
 /* Copyright
 --------------------------------------------------------------------------------------------------------------- */
-#copyright{padding:10px 0;}
+#copyright{padding:8px 0;}
 #copyright *{margin:0; padding:0; color: black}
 
 
@@ -314,8 +303,6 @@ tr, #comments li, #comments input[type="submit"], #comments input[type="reset"]{
 tr:nth-child(even), #comments li:nth-child(even){color:inherit; background-color:#F7F7F7;}
 table a, #comments a{background-color:inherit;}
 
-#note-div {width: 45%; float: left; height: 400px; background-color: gray;}
-#calendar-div {width: 45%; float: right; height: 400px; background-color: gray;}
 /* ------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------ */

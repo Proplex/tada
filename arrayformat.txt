@@ -1,0 +1,22 @@
+Here's how I would like the array formatted
+
+[0]: Type of request (add/edit/delete)
+[1]: What you're adding to/deleting from/editing (Calendar section or notes section)
+
+From here on I'm going to split it by type for readability
+----------------
+Add
+
+[2]: username
+[3]: Body of text
+[4]: Date (If it's a calendar add) otherwise nothing
+----------------------------------------
+
+Edit
+[2]: ID of what's being edited (this will be provided when page is loaded init.)
+[3]: What field is being updated
+[4]: The new text/date
+
+------------------------------------------
+Delete
+[2]: ID of what's being deleted (provided on page load)

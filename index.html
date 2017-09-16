@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+<input type="text" id="input_box">
+<button id="button" onclick="ex_func()">Click to submit</button>
+
+<p id="p"></p>
+
+<script>
+
+function ex_func() {
+
+	var input = document.getElementById("input_box").value;
+	
+	console.log(input);
+
+	$.ajax({
+		url: '/cgi-bin/test.py',
+		type: "post",
+		data: {input: input},
+		//dataType: "json",
+		//contentType: "application/json",
+		success: function(data) {
+			document.getElementById("p").innerHTML = data;
+		}
+	});
+
+	console.log('log after post');
+	
+}	
+
+</script>
+
+</body>
+</html>
+

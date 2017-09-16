@@ -14,8 +14,8 @@ Add
 
 Edit
 [2]: ID of what's being edited (this will be provided when page is loaded init.)
-[3]: What field is being updated
-[4]: The new text/date
+[3]: The new text
+[4]: The new date (if needed, otherwise leave blank)
 
 ------------------------------------------
 Delete

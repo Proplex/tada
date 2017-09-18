@@ -6,7 +6,7 @@ cgitb.enable()
 print("Content-Type: application/json")
 print()
 
-type = cgi.FieldStorage()['type'].value  #Comes in dict-form- this is querying the dict for the type- can be done for all fields
+type = cgi.FieldStorage()['type'].getvalue  #This queries the field storage for the raw string associated with the key
 
 if type = 'add':
 	response = 'Add request recieved'

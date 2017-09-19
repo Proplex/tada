@@ -11,7 +11,11 @@ Licence URI: http://www.os-templates.com/template-terms
 <title>Tada</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
 <link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+<script src='fullcalendar/lib/jquery.min.js'></script>
+<script src='fullcalendar/lib/moment.min.js'></script>
+<script src='fullcalendar/fullcalendar.js'></script>
 </head>
 <body id="top">
 <!-- ################################################################################################ -->
@@ -41,6 +45,7 @@ Licence URI: http://www.os-templates.com/template-terms
 
         <div id="calendar-div">
           <h3>Calendars</h3>
+          <div id='calendar_full'></div>
         </div>
     </article>
     <!-- ################################################################################################ -->
@@ -119,11 +124,21 @@ Licence URI: http://www.os-templates.com/template-terms
 <!-- ################################################################################################ -->
 <a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
 <!-- JAVASCRIPTS -->
-<script src="layout/scripts/jquery.min.js"></script>
 <script src="layout/scripts/jquery.backtotop.js"></script>
 <script src="layout/scripts/jquery.mobilemenu.js"></script>
 <!-- IE9 Placeholder Support -->
 <script src="layout/scripts/jquery.placeholder.min.js"></script>
 <!-- / IE9 Placeholder Support -->
+<script type="text/javascript">
+  $(document).ready(function() {
+    
+        // page is now ready, initialize the calendar...
+    
+        $('#calendar_full').fullCalendar({
+            // put your options and callbacks here
+        })
+    
+  });
+</script> 
 </body>
-</html>
+</html> 

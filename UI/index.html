@@ -1,11 +1,5 @@
 <!DOCTYPE html>
-<!--
-Template Name: Arialogic
-Author: <a href="http://www.os-templates.com/">OS Templates</a>
-Author URI: http://www.os-templates.com/
-Licence: Free to use under our free template licence terms
-Licence URI: http://www.os-templates.com/template-terms
--->
+
 <html>
 <head>
 <title>Tada</title>
@@ -16,7 +10,11 @@ Licence URI: http://www.os-templates.com/template-terms
 <script src='fullcalendar/lib/jquery.min.js'></script>
 <script src='fullcalendar/lib/moment.min.js'></script>
 <script src='fullcalendar/fullcalendar.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
+<link href='note/note.css'  rel='stylesheet' type='text/css'>
+<script src='note/note.js'></script>
 </head>
+  
 <body id="top">
 <!-- ################################################################################################ -->
 <!-- Top Background Image Wrapper -->
@@ -39,16 +37,31 @@ Licence URI: http://www.os-templates.com/template-terms
   <div style="height:700px;" id="pageintro" class="hoc clear"> 
     <!-- ################################################################################################ -->
     <article>
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <!-- ##################################    NOTE DIVISION    ######################################### -->
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
         <div id="note-div">
-          <h3>Notes</h3>
+            <!-- <div class="note">
+                <p> This is the first note that should make the user to write but I didn't implement that yet so don't try.</p>
+            </div> -->
+            <a href="javascript:;" class="buttonnote" id="add_new">Add Note</a>
+            <div id="board">
+              
+            </div>
         </div>
-
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <!-- ################################    Calendar DIVISION    ####################################### -->
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
         <div id="calendar-div">
           <!-- <h3>Calendars</h3> -->
           <div id='calendar_full'></div>
         </div>
+
     </article>
-    <!-- ################################################################################################ -->
   </div>
   <!-- ################################################################################################ -->
 </div>

@@ -39,8 +39,8 @@ File: Layout CSS
 #pageintro article .heading{margin-bottom:30px; font-size:36px;}
 #pageintro article p:last-of-type{margin-bottom:0;}
 
-#note-div {margin-left:-55%; margin-top:-15% ; width: 78%; height: 650px; float: left; border-radius: 25px; background-color: gray;}
-#calendar-div { margin-right:-55%; margin-top: -15%; width: 128%; height: 650px; float: right; border-radius: 25px; background-color: gray;}
+#note-div {margin-left:-55%; margin-top:-15% ; width: 70%; height: 650px; float: left; border-radius: 25px; background-color: transparent;}
+#calendar-div { margin-right:-55%; margin-top: -15%; width: 135%; height: 650px; float: right; border-radius: 25px; background-color: transparent;}
 
 /* Content Area
 --------------------------------------------------------------------------------------------------------------- */
@@ -303,7 +303,37 @@ tr, #comments li, #comments input[type="submit"], #comments input[type="reset"]{
 tr:nth-child(even), #comments li:nth-child(even){color:inherit; background-color:#F7F7F7;}
 table a, #comments a{background-color:inherit;}
 
-/* ------------------------------------------------------------------------------------------------------------ */
+/* Notes
+------------------------------------------------------------------------------------------------------------ */
+/* 
+.note { position: relative; width: 80%; padding: 1em 1.5em; margin: 2em auto; color: #fff;	background: #97C02F; overflow: hidden; border-radius: 15px;}
+  
+  .note:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	border-width: 0 16px 16px 0;
+	border-style: solid;
+	border-color: #fff #fff #658E15 #658E15;
+	background: #658E15;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+	display: block; width: 0;
+  }
+  
+  .note.rounded {
+	-moz-border-radius: 5px 0 5px 5px;
+	border-radius: 5px 0 5px 5px;
+  }
+  
+  .note.rounded:before {
+	border-width: 8px;
+	border-color: #fff #fff transparent transparent;
+	-moz-border-radius: 0 0 0 5px;
+	border-radius: 0 0 0 5px;
+  } */
 /* ------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------ */

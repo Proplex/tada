@@ -13,9 +13,14 @@ Licence URI: http://www.os-templates.com/template-terms
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
 <link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+<link rel='stylesheet' href='layout/styles/bootstrap.css' />
+<link rel="stylesheet" href="layout/styles/jquery-ui.css">
 <script src='fullcalendar/lib/jquery.min.js'></script>
 <script src='fullcalendar/lib/moment.min.js'></script>
 <script src='fullcalendar/fullcalendar.js'></script>
+<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+<script src='layout/scripts/bootstrap.js'></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body id="top">
 <!-- ################################################################################################ -->
@@ -119,6 +124,28 @@ Licence URI: http://www.os-templates.com/template-terms
     <!-- ################################################################################################ -->
   </div>
 </div>
+<!-- Modal -->
+<div id="addEventModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add Event to Calendar</h4>
+      </div>
+      <div class="modal-body">
+        <div id="dateOfEvent">
+          <label for="datepicker">Date: </label>
+          <input type="text" id="datepicker">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
@@ -131,13 +158,25 @@ Licence URI: http://www.os-templates.com/template-terms
 <!-- / IE9 Placeholder Support -->
 <script type="text/javascript">
   $(document).ready(function() {
-    
-        // page is now ready, initialize the calendar...
-    
-        $('#calendar_full').fullCalendar({
-            // put your options and callbacks here
-        })
-    
+    $("#datepicker").datepicker();
+    var events = [{title : 'Project Due', start : '2017-09-25T09:00:00'}, {title : 'Trip to NYC', start : '2017-09-15', end : '2017-09-18', allDay : true}, {title : 'Team Meeting', start : '2017-09-19T10:00:00', allDay : false}];
+    $('#calendar_full').fullCalendar({
+      customButtons: {
+        addNewEvent: {
+            text: 'Add New Event',
+            click: function() {
+              $('#addEventModal').modal('show');
+            }
+        }
+      },
+      header: {
+        left: 'prev,next today addNewEvent',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      events: events
+    });
+
   });
 </script> 
 </body>

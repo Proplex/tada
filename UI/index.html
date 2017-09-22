@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-
+<!-- <!DOCTYPE html> -->
 <html>
 <head>
 <title>Tada</title>
@@ -11,17 +10,54 @@
 <link rel="stylesheet" href="layout/styles/jquery-ui.css" />
 <link rel="stylesheet" href="layout/styles/bootstrap-datepicker.css" />
 <link rel="stylesheet" href="layout/styles/bootstrap-datetimepicker.css" />
-<script src='fullcalendar/lib/jquery.min.js'></script>
+<!-- <link href='fullcalendar/fullcalendar.print.min.css' rel='stylesheet' media='print' /> -->
 <script src='fullcalendar/lib/moment.min.js'></script>
+<script src='fullcalendar/lib/jquery.min.js'></script>
 <script src='fullcalendar/fullcalendar.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
 <link href='note/note.css'  rel='stylesheet' type='text/css'>
 <script src='note/note.js'></script>
 <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
 <script src='layout/scripts/bootstrap.js'></script>
 <script src='layout/scripts/bootstrap-datepicker.js'></script>
 <script src='layout/scripts/bootstrap-datetimepicker.js'></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
+<!-- JAVASCRIPTS -->
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
+<!-- IE9 Placeholder Support -->
+<script src="layout/scripts/jquery.placeholder.min.js"></script>
+<!-- / IE9 Placeholder Support -->
+<script type="text/javascript">
+  var events = [{title : 'Project Due', start : '2017-09-25T09:00:00'}, {title : 'Trip to NYC', start : '2017-09-15', end : '2017-09-18', allDay : true}, {title : 'Team Meeting', start : '2017-09-19T10:00:00', allDay : false}];
+  var newElement;
+  function addEvent() {
+    var newElement = {title : document.getElementById("eventTitle").value, start : document.getElementById("datetimepickerCalendar").value};
+    document.getElementById("eventTitle").value = "";
+    document.getElementById("datetimepickerCalendar").value = "";
+    $('#calendar_full').fullCalendar('renderEvent', newElement , true);
+  }
+  $(document).ready(function() {
+    $("#datetimepickerCalendar").datetimepicker();
+    $('#calendar_full').fullCalendar({
+      customButtons: {
+        addNewEvent: {
+            text: 'Add New Event',
+            click: function() {
+              $('#addEventModal').modal('show');
+            }
+        }
+      },
+      header: {
+        left: 'prev,next today addNewEvent',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      events: events
+    });
+
+  });
+</script> 
 </head>
   
 <body id="top">
@@ -175,41 +211,5 @@
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
-<!-- JAVASCRIPTS -->
-<script src="layout/scripts/jquery.backtotop.js"></script>
-<script src="layout/scripts/jquery.mobilemenu.js"></script>
-<!-- IE9 Placeholder Support -->
-<script src="layout/scripts/jquery.placeholder.min.js"></script>
-<!-- / IE9 Placeholder Support -->
-<script type="text/javascript">
-  var events = [{title : 'Project Due', start : '2017-09-25T09:00:00'}, {title : 'Trip to NYC', start : '2017-09-15', end : '2017-09-18', allDay : true}, {title : 'Team Meeting', start : '2017-09-19T10:00:00', allDay : false}];
-  var newElement;
-  function addEvent() {
-    var newElement = {title : document.getElementById("eventTitle").value, start : document.getElementById("datetimepickerCalendar").value};
-    document.getElementById("eventTitle").value = "";
-    document.getElementById("datetimepickerCalendar").value = "";
-    $('#calendar_full').fullCalendar('renderEvent', newElement , true);
-  }
-  $(document).ready(function() {
-    $("#datetimepickerCalendar").datetimepicker();
-    $('#calendar_full').fullCalendar({
-      customButtons: {
-        addNewEvent: {
-            text: 'Add New Event',
-            click: function() {
-              $('#addEventModal').modal('show');
-            }
-        }
-      },
-      header: {
-        left: 'prev,next today addNewEvent',
-        center: 'title',
-        right: 'month,agendaWeek,agendaDay'
-      },
-      events: events
-    });
-
-  });
-</script> 
 </body>
 </html> 

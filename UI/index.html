@@ -30,10 +30,13 @@
 <script type="text/javascript">
   var events = [{title : 'Project Due', start : '2017-09-25T09:00:00'}, {title : 'Trip to NYC', start : '2017-09-15', end : '2017-09-18', allDay : true}, {title : 'Team Meeting', start : '2017-09-19T10:00:00', allDay : false}];
   var newElement;
+  // Function called when Save button in the Add New Event modal is pressed
   function addEvent() {
+    // Take values in the Title and Date fields an put in in a new variable.
     var newElement = {title : document.getElementById("eventTitle").value, start : document.getElementById("datetimepickerCalendar").value};
     document.getElementById("eventTitle").value = "";
     document.getElementById("datetimepickerCalendar").value = "";
+    // Add new event to the full calendar and render it.
     $('#calendar_full').fullCalendar('renderEvent', newElement , true);
   }
   $(document).ready(function() {
@@ -43,6 +46,7 @@
         addNewEvent: {
             text: 'Add New Event',
             click: function() {
+              //Show the modal when the custom button is pressed
               $('#addEventModal').modal('show');
             }
         }
@@ -169,6 +173,7 @@
   </div>
 </div> -->
 <!-- Modal -->
+<!-- Modal found in the calendar. Opened when 'Add New Event' button is pressed-->
 <div id="addEventModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -190,6 +195,8 @@
         </div>
       </div>
       <div class="modal-footer">
+        <!-- addEvent() is the function called when the Save button is pressed -->
+        <!-- Modal will close after either button is pressed -->
         <button type="button" class="btn btn-success" data-dismiss="modal" onclick="addEvent()">Save</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>

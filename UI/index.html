@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="layout/styles/jquery-ui.css" />
 <link rel="stylesheet" href="layout/styles/bootstrap-datepicker.css" />
 <link rel="stylesheet" href="layout/styles/bootstrap-datetimepicker.css" />
-<!-- <link href='fullcalendar/fullcalendar.print.min.css' rel='stylesheet' media='print' /> -->
 <script src='fullcalendar/lib/moment.min.js'></script>
 <script src='fullcalendar/lib/jquery.min.js'></script>
 <script src='fullcalendar/fullcalendar.js'></script>
@@ -38,7 +37,7 @@
     $('#calendar_full').fullCalendar('renderEvent', newElement , true);
   }
   $(document).ready(function() {
-    $("#datetimepickerCalendar").datetimepicker();
+    // $("#datetimepickerCalendar").datetimepicker();
     $('#calendar_full').fullCalendar({
       customButtons: {
         addNewEvent: {
@@ -51,7 +50,7 @@
       header: {
         left: 'prev,next today addNewEvent',
         center: 'title',
-        right: 'month,agendaWeek,agendaDay'
+        right: 'month'
       },
       events: events
     });
@@ -79,7 +78,7 @@
     </header>
   </div>
    <!-- ################################################################################################ -->
-  <div style="height:700px;" id="pageintro" class="hoc clear"> 
+  <div id="pageintro" class="hoc clear"> 
     <!-- ################################################################################################ -->
     <article>
     <!-- ################################################################################################ -->
@@ -88,9 +87,7 @@
     <!-- ################################################################################################ -->
     <!-- ################################################################################################ -->
         <div id="note-div">
-            <!-- <div class="note">
-                <p> This is the first note that should make the user to write but I didn't implement that yet so don't try.</p>
-            </div> -->
+    
             <a href="javascript:;" class="buttonnote" id="add_new">Add Note</a>
             <div id="board">
               
@@ -113,9 +110,8 @@
 <!-- End Top Background Image Wrapper -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row4">
+<!-- <div class="wrapper row4">
   <footer id="footer" class="hoc clear"> 
-    <!-- ################################################################################################ -->
     <div class="one_quarter first">
       <h6 class="title">Contact Address</h6>
       <ul class="nospace linklist contact">
@@ -140,7 +136,6 @@
     </div>
     <div class="one_quarter">
       <h6 class="title">Sign-up</h6>
-      <!-- <p class="btmspace-30">The temporary password will be sent to the email.</p> -->
       <form method="post" action="#">
         <fieldset>
           <legend>Newsletter:</legend>
@@ -153,7 +148,6 @@
     </div>
     <div class="one_quarter">
         <h6 class="title">Forgot password</h6>
-        <!-- <p class="btmspace-30">Temporary password will be sent.</p> -->
         <form method="post" action="#">
           <fieldset>
             <legend>Newsletter:</legend>
@@ -163,24 +157,20 @@
           </fieldset>
         </form>
       </div>
-    <!-- ################################################################################################ -->
   </footer>
-</div>
+</div> -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper row5">
+<!-- <div class="wrapper row5">
   <div id="copyright" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-    <p class="fl_left">Copyright &copy; 2016 - All Rights Reserved</a></p>
+    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved</a></p>
     <p class="fl_right">TADA INC.</p>
-    <!-- ################################################################################################ -->
   </div>
-</div>
+</div> -->
 <!-- Modal -->
 <div id="addEventModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
-    <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Add Event to Calendar</h4>

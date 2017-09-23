@@ -39,8 +39,8 @@ File: Layout CSS
 #pageintro article .heading{margin-bottom:30px; font-size:36px;}
 #pageintro article p:last-of-type{margin-bottom:0;}
 
-#note-div {margin-left:-55%; margin-top:-15% ; width: 70%; height: 650px; float: left; border-radius: 25px; background-color: transparent;}
-#calendar-div { margin-right:-55%; margin-top: -15%; width: 135%; height: 650px; float: right; border-radius: 25px; background-color: transparent;}
+#note-div {margin-left:-55%; margin-top:-15% ; width: 60%; float: left; border-radius: 25px; background-color: transparent; }
+#calendar-div { margin-right:-55%; margin-top: -15%; width: 135%; float: right; border-radius: 25px; background-color: transparent;}
 
 /* Content Area
 --------------------------------------------------------------------------------------------------------------- */
@@ -117,7 +117,7 @@ File: Layout CSS
 
 /* Copyright
 --------------------------------------------------------------------------------------------------------------- */
-#copyright{padding:8px 0;}
+#copyright{padding:8px 0}
 #copyright *{margin:0; padding:0; color: black}
 
 
@@ -239,7 +239,7 @@ input:focus, textarea:focus, *:required:focus{border-color:#82A800;}
 .row2, .row2 a{color:#FFFFFF; background-color:transparent;}
 .row3{color:#888888; background-color:#FFFFFF;}
 .row4{color:#888888; background-color:#1F1F1F;}
-.row5, .row5 a{color:#888888; background-color:#FFFFFF;}
+.row5, .row5 a{height:5%; color:#888888; background-color:#FFFFFF;}
 
 .coloured{color:#FFFFFF; background-color:#82A800;}
 
@@ -349,6 +349,7 @@ table a, #comments a{background-color:inherit;}
 --------------------------------------------------------------------------------------------------------------- */
 @media screen and (min-width:978px){
 	.hoc{max-width:978px;}
+	.hoc{max-height:800px;}
 }
 
 
@@ -383,7 +384,8 @@ table a, #comments a{background-color:inherit;}
 
 	#pageintro article{max-width:90%;}
 
-	#footer{padding-bottom:50px;}/* Not neccessary - just looks better */
+	/* #footer{padding-bottom:50px;} */
+	/* Not neccessary - just looks better */
 }
 
 

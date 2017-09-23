@@ -3,4 +3,4 @@ Web application that is a clone of Trello and Google Calendar. On the left side,
 
 ## Instructions for Viewing Prototype
 
-Open UI/index.html with Google Chrome.
+Clone or download the source files from the develop branch and open tada/UI/index.html with Google Chrome by right clicking the corresposnding index.html file, hovering over the 'Open With' option, and choosing Google Chrome.

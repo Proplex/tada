@@ -7,7 +7,7 @@ CREATE TABLE users(
   
 );
 
-CREATE TABLE notes(
+CREATE TABLE note(
   id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(30),
   text VARCHAR(100),

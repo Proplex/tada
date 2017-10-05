@@ -33,11 +33,25 @@
   // Function called when Save button in the Add New Event modal is pressed
   function addEvent() {
     // Take values in the Title and Date fields an put in in a new variable.
-    var newElement = {title : document.getElementById("eventTitle").value, start : document.getElementById("datetimepickerCalendar").value};
-    document.getElementById("eventTitle").value = "";
-    document.getElementById("datetimepickerCalendar").value = "";
+    var titleOfNewEvent = document.getElementById("eventTitle").value;
+    var dateOfNewEvent = document.getElementById("datetimepickerCalendar").value;
+    var newElement = {title : titleOfNewEvent, start : dateOfNewEvent};
     // Add new event to the full calendar and render it.
     $('#calendar_full').fullCalendar('renderEvent', newElement , true);
+    var sendToDB = [{"username": "", "text": titleOfNewEvent, "date": dateOfNewEvent}];
+    $.ajax({
+      url: '',
+      type: "post",
+      data: {"events": sendToDB},
+      dataType: "json",
+      contentType: "application/json",
+      success: function() {
+        // If the JSON object was sent successfully, remove the contents of the modal inputs
+        // Additionally we can have a separate notification...
+        document.getElementById("eventTitle").value = "";
+        document.getElementById("datetimepickerCalendar").value = "";
+      }
+    });
   }
   $(document).ready(function() {
     // $("#datetimepickerCalendar").datetimepicker();
@@ -103,76 +117,14 @@
     <!-- ################################################################################################ -->
     <!-- ################################################################################################ -->
         <div id="calendar-div">
-          <!-- <h3>Calendars</h3> -->
           <div id='calendar_full'></div>
         </div>
 
     </article>
   </div>
-  <!-- ################################################################################################ -->
 </div>
 <!-- End Top Background Image Wrapper -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- <div class="wrapper row4">
-  <footer id="footer" class="hoc clear"> 
-    <div class="one_quarter first">
-      <h6 class="title">Contact Address</h6>
-      <ul class="nospace linklist contact">
-        <li><i class="fa fa-map-marker"></i>
-          <address>
-          Davis Hall, University at Buffalo, New York, 14260
-          </address>
-        </li>
-        <li><i class="fa fa-phone"></i> +1 (716) 445 7351<br>
-          +00 (123) 456 7890</li>
-        <li><i class="fa fa-envelope-o"></i> kunwooch@buffalo.edu</li>
-      </ul>
-    </div>
-    <div class="one_quarter">
-      <h6 class="title">Whatever link</h6>
-      <ul class="nospace linklist">
-        <li><a href="#">link1</a></li>
-        <li><a href="#">link2</a></li>
-        <li><a href="#">link3</a></li>
-        <li><a href="#">link4</a></li>
-      </ul>
-    </div>
-    <div class="one_quarter">
-      <h6 class="title">Sign-up</h6>
-      <form method="post" action="#">
-        <fieldset>
-          <legend>Newsletter:</legend>
-          <input class="btmspace-15" type="text" value="" placeholder="Name">
-          <input class="btmspace-15" type="text" value="" placeholder="Email">          
-          <input class="btmspace-15" type="text" value="" placeholder="Password">
-          <button type="submit" value="submit">Submit</button>
-        </fieldset>
-      </form>
-    </div>
-    <div class="one_quarter">
-        <h6 class="title">Forgot password</h6>
-        <form method="post" action="#">
-          <fieldset>
-            <legend>Newsletter:</legend>
-            <input class="btmspace-15" type="text" value="" placeholder="Name">
-            <input class="btmspace-15" type="text" value="" placeholder="Email">
-            <button type="submit" value="submit">Submit</button>
-          </fieldset>
-        </form>
-      </div>
-  </footer>
-</div> -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- <div class="wrapper row5">
-  <div id="copyright" class="hoc clear"> 
-    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved</a></p>
-    <p class="fl_right">TADA INC.</p>
-  </div>
-</div> -->
-<!-- Modal -->
+
 <!-- Modal found in the calendar. Opened when 'Add New Event' button is pressed-->
 <div id="addEventModal" class="modal fade" role="dialog">
   <div class="modal-dialog">

@@ -4,6 +4,7 @@
 <title>Tada</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="google-signin-client_id" content="275995304578-5k2tiodmufnlb9tkqjitaf5tq0its755.apps.googleusercontent.com">
 <link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
 <link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 <link rel='stylesheet' href='layout/styles/bootstrap.css' />
@@ -21,6 +22,7 @@
 <script src='layout/scripts/bootstrap-datetimepicker.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <!-- JAVASCRIPTS -->
 <script src="layout/scripts/jquery.backtotop.js"></script>
 <script src="layout/scripts/jquery.mobilemenu.js"></script>
@@ -28,16 +30,46 @@
 <script src="layout/scripts/jquery.placeholder.min.js"></script>
 <!-- / IE9 Placeholder Support -->
 <script type="text/javascript">
-  var events = [{title : 'Project Due', start : '2017-09-25T09:00:00'}, {title : 'Trip to NYC', start : '2017-09-15', end : '2017-09-18', allDay : true}, {title : 'Team Meeting', start : '2017-09-19T10:00:00', allDay : false}];
-  var newElement;
   // Function called when Save button in the Add New Event modal is pressed
   function addEvent() {
-    // Take values in the Title and Date fields an put in in a new variable.
-    var newElement = {title : document.getElementById("eventTitle").value, start : document.getElementById("datetimepickerCalendar").value};
-    document.getElementById("eventTitle").value = "";
-    document.getElementById("datetimepickerCalendar").value = "";
+    // Take values in the Title and Date fields and put it in a new variable.
+    var titleOfNewEvent = document.getElementById("eventTitle").value;
+    var dateOfNewEvent = document.getElementById("datetimepickerCalendar").value;
+    var newElement = {title : titleOfNewEvent, start : dateOfNewEvent};
     // Add new event to the full calendar and render it.
     $('#calendar_full').fullCalendar('renderEvent', newElement , true);
+    var sendToDB = [{"type":"add","format":"calendar","user": "", "text": titleOfNewEvent, "date": dateOfNewEvent}];
+    $.ajax({
+      url: '/cgi_bin/inputselector.py',
+      type: "post",
+      data: {"events": sendToDB},
+      dataType: "json",
+      contentType: "application/json",
+      success: function() {
+        // If the JSON object was sent successfully, remove the contents of the modal inputs
+        // Additionally we can have a separate notification...
+        document.getElementById("eventTitle").value = "";
+        document.getElementById("datetimepickerCalendar").value = "";
+      }
+    });
+  }
+  function onSignIn(googleUser) {
+    //var profile = googleUser.getBasicProfile();
+    //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    //console.log('Name: ' + profile.getName());
+    //console.log('Image URL: ' + profile.getImageUrl());
+    //console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    $.ajax({
+      url: '',
+      type: "post",
+      data: {"email": profile.getEmail()},
+      //dataType: "json",
+      //contentType: "application/json",
+      success: function() {
+        // render full page
+
+      }
+    });
   }
   $(document).ready(function() {
     // $("#datetimepickerCalendar").datetimepicker();
@@ -52,7 +84,7 @@
         }
       },
       header: {
-        left: 'prev,next today addNewEvent',
+        left: 'prev,next addNewEvent',
         center: 'title',
         right: 'month'
       },
@@ -103,76 +135,15 @@
     <!-- ################################################################################################ -->
     <!-- ################################################################################################ -->
         <div id="calendar-div">
-          <!-- <h3>Calendars</h3> -->
+          <!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
           <div id='calendar_full'></div>
         </div>
 
     </article>
   </div>
-  <!-- ################################################################################################ -->
 </div>
 <!-- End Top Background Image Wrapper -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- <div class="wrapper row4">
-  <footer id="footer" class="hoc clear"> 
-    <div class="one_quarter first">
-      <h6 class="title">Contact Address</h6>
-      <ul class="nospace linklist contact">
-        <li><i class="fa fa-map-marker"></i>
-          <address>
-          Davis Hall, University at Buffalo, New York, 14260
-          </address>
-        </li>
-        <li><i class="fa fa-phone"></i> +1 (716) 445 7351<br>
-          +00 (123) 456 7890</li>
-        <li><i class="fa fa-envelope-o"></i> kunwooch@buffalo.edu</li>
-      </ul>
-    </div>
-    <div class="one_quarter">
-      <h6 class="title">Whatever link</h6>
-      <ul class="nospace linklist">
-        <li><a href="#">link1</a></li>
-        <li><a href="#">link2</a></li>
-        <li><a href="#">link3</a></li>
-        <li><a href="#">link4</a></li>
-      </ul>
-    </div>
-    <div class="one_quarter">
-      <h6 class="title">Sign-up</h6>
-      <form method="post" action="#">
-        <fieldset>
-          <legend>Newsletter:</legend>
-          <input class="btmspace-15" type="text" value="" placeholder="Name">
-          <input class="btmspace-15" type="text" value="" placeholder="Email">          
-          <input class="btmspace-15" type="text" value="" placeholder="Password">
-          <button type="submit" value="submit">Submit</button>
-        </fieldset>
-      </form>
-    </div>
-    <div class="one_quarter">
-        <h6 class="title">Forgot password</h6>
-        <form method="post" action="#">
-          <fieldset>
-            <legend>Newsletter:</legend>
-            <input class="btmspace-15" type="text" value="" placeholder="Name">
-            <input class="btmspace-15" type="text" value="" placeholder="Email">
-            <button type="submit" value="submit">Submit</button>
-          </fieldset>
-        </form>
-      </div>
-  </footer>
-</div> -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- <div class="wrapper row5">
-  <div id="copyright" class="hoc clear"> 
-    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved</a></p>
-    <p class="fl_right">TADA INC.</p>
-  </div>
-</div> -->
-<!-- Modal -->
+
 <!-- Modal found in the calendar. Opened when 'Add New Event' button is pressed-->
 <div id="addEventModal" class="modal fade" role="dialog">
   <div class="modal-dialog">

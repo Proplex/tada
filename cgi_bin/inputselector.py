@@ -45,7 +45,7 @@ def edit_entry(field_storage):
 
 	try:
 		format = field_storage['format'].getvalue #note or calendar?
-		id = cgiFieldStorage()['id'].getvalue	#value is what will be used to figure out what to update
+		id = field_storage()['id'].getvalue	#value is what will be used to figure out what to update
 	
 		try:
 			with connection.cursor() as cursor:
@@ -75,7 +75,7 @@ def edit_entry(field_storage):
 def delete_entry(field_storage):
 	try:
 		format = field_storage['format'].getvalue
-		id = cgiFieldStorage()['id'].getvalue	
+		id = field_storage['id'].getvalue	
 		with connection.cursor() as cursor:
 			cmd = "DELETE FROM %s WHERE id= %s" % (format, id) #s's represent args
 			cursor.execute(cmd); #Run it

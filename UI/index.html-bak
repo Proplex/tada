@@ -115,7 +115,7 @@
   
 <body id="top">
 
-<div class="bgded"> 
+<div class="bgded" style="background-image:url('images/demo/backgrounds/01.png');"> 
   
    <div class="wrapper overlay">
     <header id="header" class="hoc clear">
@@ -132,7 +132,7 @@
     <article>
         <div id="note-div">
     
-            <a href="" class="buttonnote" id="add_new">Add Note</a>
+            <a href="javascript:;" class="buttonnote" id="add_new">Add Note</a>
             <div id="board">
               
             </div>

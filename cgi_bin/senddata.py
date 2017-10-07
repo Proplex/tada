@@ -22,12 +22,12 @@ def main():
 	
 	try:
 		with connection.cursor(pymysql.cursors.DictCursor)() as cursor:
-			cmd = 'SELECT * FROM note WHERE username=%s'
-			cursor.execute(cmd % (user))
+			cmd = 'SELECT * FROM note WHERE username=%s' % (user)
+			cursor.execute(cmd)
 			notes = cursor.fetchall()
 		
-			cmd = 'SELECT * FROM calendar WHERE username=%s'
-			cursor.execute(cmd % (user))
+			cmd = 'SELECT * FROM calendar WHERE username=%s' % (user)
+			cursor.execute(cmd)
 			events = cursor.fetchall()
 	except:
 		print(json.JSONEncoder().encode({'error',"Unable to load data"}))

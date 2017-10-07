@@ -3,7 +3,7 @@ import cgi, cgitb, json, pymysql.cursors
 def setup_db_connect():
 	dbconn = pymysql.connect(host='localhost',
 				 user='root',
-				 password='defaultmysqlpassword',
+				 password='',
 				 db='db',
 				 charset='utf8mb4',
 				 cursorclass=pymysql.cursors.DictCursor)

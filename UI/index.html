@@ -45,24 +45,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $('#calendar_full').fullCalendar({
-      customButtons: {
-        addNewEvent: {
-          text: 'Add New Event',
-          click: function() {
-            //Show the modal when the custom button is pressed
-            $('#addEventModal').modal('show');
-            }
-        }
-      },
-      header: {
-        left: 'prev,next addNewEvent',
-        center: 'title',
-        right: 'month'
-      },
-      events: [],
-      height: 650
-    });  
+     
   });
 
   // Function called when Save button in the Add New Event modal is pressed
@@ -93,7 +76,17 @@
   function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     console.log('Email: ' + profile.getEmail());
-    document.getElementById("pageintro").removeAttribute("hidden");
+    document.getElementById("navbar").style.display = "";
+    document.getElementById("noteCalendarDivision").style.display = "";
+    document.getElementById("startupPage").style.display = "none";
+    createCalendar();
+  }
+
+  function signInFake(googleUser) {
+    console.log('Logged in');
+    document.getElementById("navbar").style.display = "";
+    document.getElementById("noteCalendarDivision").style.display = "";
+    document.getElementById("startupPage").style.display = "none";
     createCalendar();
   }
 
@@ -103,7 +96,6 @@
       console.log('User signed out.');
     });
   }
-
 
   function createCalendar() {
     $('#calendar_full').fullCalendar({
@@ -117,12 +109,14 @@
         }
       },
       header: {
-        left: 'prev,next addNewEvent',
+        left: 'prev,next',
         center: 'title',
-        right: 'month'
+        right: 'addNewEvent'
       },
-      events: []
-    });  
+      events: [],
+      height: 650, // would like to change this to parent
+      fixedWeekCount: false
+    });   
   }
 
 
@@ -130,7 +124,18 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+  <!-- Upon visiting TaDa page, user will be greeted with a start up page to login with Google -->
+  <div id = "startupPage" class = "container-fluid">
+    <div class = "row">
+        <h1 align="center">Welcome to TaDa!</h1>
+        <div class = "col-md-6">
+          <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
+          <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button>
+        </div>
+    </div>
+  </div>
+  <!-- For navbar -->
+  <nav id = "navbar" class="navbar navbar-toggleable-md navbar-inverse bg-inverse" style="display:none;">
     <a class="navbar-brand navbar-center"style="font-size: 30px; color: white; font-weight: bold;">TaDa</a>
 
     <div class="collapse navbar-collapse">
@@ -139,8 +144,8 @@
       </form>
     </div>
   </nav>
-
-  <div class = "container-fluid" style = "padding-top: 20px">
+  <!-- Notes and Calendar division -->
+  <div id = "noteCalendarDivision" class = "container-fluid" style = "padding-top: 20px; display:none;">
     <div class = "row">
       <div class="col-md-4">
         <a href="javascript:;" class="buttonnote" id="add_new">Add Note</a>

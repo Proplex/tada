@@ -11,3 +11,4 @@ CREATE TABLE note(
 INSERT INTO note(username,text) VALUES (foo,bar)
 
 select scope_identity() --This should grab the ID of the newly inserted entry. Echo this back once this gets to the python script
+--in python- should be cursor.lastrowid

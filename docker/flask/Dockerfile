@@ -13,29 +13,30 @@ MAINTAINER Keith Carolus (kmcarolu@buffalo.edu)
 # > docker build -t tada_flask_image /path/to/dir/with/this/file
 
 # to run
-# docker run -d \
-#            --name=tada_flask_server \
-#            --network=host \
-#            --env="DISPLAY" \
-#            --volume="/tmp/.X11-unix:/tmp/.X11-unix" \
-#            -P \
-#            tada_flask_image \
-#            /bin/bash -c "while true; do echo running; sleep 10; done"
+# > docker run -d \
+#              --name=tada_flask_server \
+#              --network=host \
+#              --env="DISPLAY" \
+#              --volume="/tmp/.X11-unix:/tmp/.X11-unix" \
+#              -P \
+#              tada_flask_image \
+#              /bin/bash -c "while true; do echo running; sleep 10; done"
 # or
-# docker run -d --name=tada_flask_server --network=host --env="DISPLAY" --volume="/tmp/.X11-unix:/tmp/.X11-unix" -P tada_flask_image /bin/bash -c "while true; do echo running; sleep 10; done"
+# > docker run -d --name=tada_flask_server --network=host --env="DISPLAY" --volume="/tmp/.X11-unix:/tmp/.X11-unix" -P tada_flask_image /bin/bash -c "while true; do echo running; sleep 10; done"
 
 # to attach
 # > docker exec -it tada_flask_server /bin/bash
 # then
-# > FLASK_APP=/home/tada_user/tada/flask/app.py flask run
-# tada_user's password is tada_user
-# open browser and go to http://localhost
+# > FLASK_APP=/home/tada_user/tada/flask/tada.py flask run --host=0.0.0.0
+# open browser and go to http://0.0.0.0/
 # you should see TaDa :)
 
 # to shut down
 # > docker stop tada_flask_server
 # to restart after restarting computer
 # > docker start tada_flask_server
+
+# tada_user's password is tada_user
 
 ENV DEBIAN_FRONTEND=noninteractive
 

@@ -3954,6 +3954,15 @@ tbody.collapse.show {
   list-style: none;
 }
 
+.navbar-center
+{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 5;
+    text-align: center;
+}
+
 .navbar-nav .nav-link {
   padding-right: 0;
   padding-left: 0;

@@ -88,7 +88,7 @@ a:focus {
   float: left;
   display: block;
   position: relative;
-  left: 4%;   
+  /* left: 4%;    */
   padding: 1em;
   width: 200px;
   max-height: 160px;

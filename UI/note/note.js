@@ -56,7 +56,6 @@
     };
 })(jQuery);
 
-
 var noteTemp =  '<div class="note">'
 				+	'<a href="javascript:;" class="button remove">X</a>'
 				+ 	'<div class="note_cnt">'
@@ -68,31 +67,69 @@ var noteTemp =  '<div class="note">'
 var noteZindex = 1;
 function deleteNote(){
     $(this).parent('.note').hide("puff",{ percent: 133}, 250);
+    num--;
 };
 
+var num = 1;
 function newNote() {
-  $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
-    function(){
-       $(this).zIndex(++noteZindex);
-    });
- 
-	$('.remove').click(deleteNote);
-	$('textarea').autogrow();
-	
-  $('.note')
-	return false; 
+    if(num < 4){ // limit the number of note to 3 for now
+        $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+            function(){
+            $(this).zIndex(++noteZindex);
+            
+            });
+            $(this).id = 'note'+ num.toString();
+            num++;
+            $('.remove').click(deleteNote);
+            $('textarea').autogrow();
+            
+        $('.note')
+            return false; 
+    }
 };
 
-
+function getOffset(el) {
+    el = el.getBoundingClientRect();
+    return {
+      left: el.left + window.scrollX,
+      top: el.top + window.scrollY
+    }
+};
 
 $(document).ready(function() {
     
     $("#board").height($(document).height());
     
-    $("#add_new").click(newNote);
-    
+    $("#add_new").click(newNote);    
     $('.remove').click(deleteNote);
-    newNote();
+    
+    // newNote();
 	  
     return false;
 });
+
+var x = document.getElementsByTagName("DIV");
+var i;
+for (i = 0; i < x.length; i++) {        
+    if (x.id == "note1") { 
+        x[i].style.fontSize = "30px";
+    }  
+    if (x.id == "note2") { 
+        x[i].style.fontSize = "30px";
+    }  
+    // if (x.id == "note3") { 
+    //     x[i].style.fontSize = "30px";
+    // }  
+    // if (x.id == "note4") { 
+    //     x[i].style.fontSize = "30px";
+    // }   
+
+    // alert("Top: " + getOffset(note1).left + " Left: " + getOffset(note1).right);
+    // getOffset(newNote).left;
+    // getOffset(newNote).right;
+};
+// $("button").click(function(){
+//     var x = $("p").position();
+//     alert("Top: " + x.top + " Left: " + x.left);
+// });
+

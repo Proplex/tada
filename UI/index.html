@@ -47,8 +47,6 @@
     var titleOfNewEvent = document.getElementById("eventTitle").value;
     var dateOfNewEvent = document.getElementById("datetimepickerCalendar").value;
     var newElement = {title : titleOfNewEvent, start : dateOfNewEvent};
-    // Add new event to the full calendar and render it.
-    $('#calendar_full').fullCalendar('renderEvent', newElement , true);
     var sendToDB = [{"type":"event","username": "testuser2", "text": titleOfNewEvent, "dt": dateOfNewEvent}];
     $.ajax({
       url: 'http://0.0.0.0:5000/add',
@@ -63,6 +61,8 @@
         document.getElementById("datetimepickerCalendar").value = "";
         var serverResponse = JSON.parse(response);
         console.log(serverResponse.success);
+        // Add new event to the full calendar and render it.
+        $('#calendar_full').fullCalendar('renderEvent', newElement , true);
       },
       error: function(response) {
         var serverResponse = JSON.parse(response);
@@ -107,6 +107,7 @@
     document.getElementById("navbar").style.display = "";
     document.getElementById("noteCalendarDivision").style.display = "";
     document.getElementById("startupPage").style.display = "none";
+    emptyEvents = [];
     createCalendar();
   }
 
@@ -145,18 +146,18 @@
 <body>
   <!-- Upon visiting TaDa page, user will be greeted with a start up page to login with Google -->
   <div id = "startupPage">
-    <h1 class="text-center" style="padding-top:15%">Welcome to TaDa! <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button>
+    <h1 class="text-center" style="padding-top:15%">Welcome to TaDa! <br><br> <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button>
     </h1>
     <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
   </div>
   <!-- For navbar -->
   <nav id = "navbar" class="navbar navbar-toggleable-md navbar-inverse bg-inverse" style="display:none;">
-    <a class="navbar-brand navbar-center"style="font-size: 30px; color: white; font-weight: bold;">TaDa</a>
+    <a class="navbar-brand" style="position: relative; position: absolute; left: 50%; margin-left: -50px !important; display: block; font-size: 30px; color: white; font-weight: bold;">TaDa</a>
 
     <div class="collapse navbar-collapse">
-      <form class="form-inline my-2 my-lg-0">
-        <button class="btn btn-danger my-2 my-sm-0" onclick="signOut()">Sign Out</button>
-      </form>
+        <form class="form-inline my-2 my-lg-0">
+          <button class="btn btn-danger my-2 my-sm-0" onclick="signOut()">Sign Out</button>
+        </form>
     </div>
   </nav>
   <!-- Notes and Calendar division -->

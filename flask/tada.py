@@ -69,6 +69,8 @@ def root():
 # add note or event
 @app.route('/add',methods=['POST'])
 def add():
+	print(request.__dict__)
+	print(request.get_json())
 	connection = None	
 	try:	
 		connection = connect_to_db()
@@ -92,8 +94,7 @@ def add():
 		connection.cursor().execute(sql)
 		connection.commit()
 	except Exception as e:
-		print(e)		
-		return error('add failed')
+		return error(e)
 	finally:
 		if connection != None:		
 			connection.close()
@@ -173,8 +174,7 @@ def login():
 			cursor.execute(sql)
 			events = cursor.fetchall()
 	except Exception as e:
-		print(e)
-		return error('login fetch all failed')
+		return error(e)
 	finally:
 		if connection != None: 
 			connection.close()	

@@ -8,6 +8,7 @@ CREATE TABLE users(
 CREATE TABLE note(
   id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(100),
+  title VARCHAR(50),
   text VARCHAR(100),
   x INT,
   y INT,
@@ -18,6 +19,6 @@ CREATE TABLE event(
   id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(100),
   text VARCHAR(100),
-  datetime DATETIME,
+  dt DATETIME,
   PRIMARY KEY (id)
 );

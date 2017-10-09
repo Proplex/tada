@@ -53,9 +53,10 @@ def add():
 		
 		sql = ''
 		if (type == 'note'):
+			title = input['title']
 			x = input['x']
 			y = input['y']
-			sql = "INSERT INTO %s (username, text, x, y) VALUES ('%s', '%s','%s','%s')" % (type,username,text,x,y)
+			sql = "INSERT INTO %s (username, title, text, x, y) VALUES ('%s', '%s','%s','%s','%s')" % (type,username,title,text,x,y)
 		elif (type == 'event'):
 			datetime = input['datetime']
 			sql = "INSERT INTO %s (username, text, datetime) VALUES ('%s', '%s', '%s')" % (type,username,text,datetime)

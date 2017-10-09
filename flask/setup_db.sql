@@ -9,10 +9,12 @@ CREATE TABLE note(
   id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(100),
   text VARCHAR(100),
+  x INT,
+  y INT,
   PRIMARY KEY (id)
 );
 
-CREATE TABLE calendar(
+CREATE TABLE event(
   id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(100),
   text VARCHAR(100),

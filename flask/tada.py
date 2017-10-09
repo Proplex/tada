@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 import pymysql
 
 app = Flask(__name__,
@@ -10,11 +10,11 @@ app = Flask(__name__,
 # returns connection to MySQL database
 def connect_to_db():
 	connection = pymysql.connect(host='localhost',
-				  user='root',
-				  password='',
-				  db='db',
-				  charset='utf8mb4',
-				  cursorclass=pymysql.cursors.DictCursor)
+				     user='root',
+				     password='',
+				     db='db',
+				     charset='utf8mb4',
+				     cursorclass=pymysql.cursors.DictCursor)
 	return connection
 
 # returns a JSON dictionary where key "success" hashes to the supplied sucess message string
@@ -24,7 +24,6 @@ def success(message):
 # returns a JSON dictionary where key "error" hashes to the supplied error message string
 def error(message):
 	return jsonify({'error':message})
-
 
 
 @app.route('/')
@@ -41,102 +40,116 @@ def root():
 
 
 # add note or event
-@app.route('/add')
+@app.route('/add',methods=['POST'])
 def add():
+	connection = None	
 	try:	
-		connection = setup_db_conn()
-		input  = request.json		
-		
-		type     = input['type'].getvalue
-		username = input['username'].getvalue
-		text     = input['text'].getvalue
+		connection = connect_to_db()
+		input  = dict(request.get_json())		
+
+		type     = input['type']
+		username = input['username']
+		text     = input['text']
 		
 		sql = ''
 		if (type == 'note'):
-			sql = 'INSERT INTO %s (username, text) VALUES (%s, %s)' % (type,username,text)
+			x = input['x']
+			y = input['y']
+			sql = "INSERT INTO %s (username, text, x, y) VALUES ('%s', '%s','%s','%s')" % (type,username,text,x,y)
 		elif (type == 'event'):
-			datetime = field_storage['datetime'].getvalue
-			sql = 'INSERT INTO %s (username, text, datetime) VALUES (%s, %s, %s)' % (type,username,text,datetime)
+			datetime = input['datetime']
+			sql = "INSERT INTO %s (username, text, datetime) VALUES ('%s', '%s', '%s')" % (type,username,text,datetime)
 		else:
 			raise Exception()
 		connection.cursor().execute(sql)
 		connection.commit()
-	except:
+	except Exception as e:
+		print(e)		
 		return error('add failed')
 	finally:
-		connection.close()
+		if connection != None:		
+			connection.close()
 	
 	return success('add succeeded')
 
 
 # edit note or event
-@app.route('/edit')
-def edit():
-	try:	
-		connection = setup_db_conn()
-		input  = request.json		
-		
-		type     = input['type'].getvalue
-		id       = input['id'].getvalue
-		datetime = field_storage['datetime'].getvalue
-		
-		# TODO
-		sql = 'UPDATE %s SET text = %s WHERE id = %s' % (type,text,id)
-		sql = 'UPDATE %s SET date = %s WHERE id = %s' % (type,datetime,id)
-		
-		connection.cursor().execute(sql)
-		connection.commit()
-	except:
-		return error('edit failed')
-	finally:
-		connection.close()
-
-	return success('edit succeeded')
+#@app.route('/edit')
+#def edit():
+#	connection = None	
+#	try:	
+#		connection = setup_db_conn()
+#		input  = request.get_json()		
+#
+#		type     = input['type'].getvalue
+#		id       = input['id'].getvalue
+#		datetime = field_storage['datetime'].getvalue
+#		
+#		# TODO
+#		sql = 'UPDATE %s SET text = %s WHERE id = %s' % (type,text,id)
+#		sql = 'UPDATE %s SET date = %s WHERE id = %s' % (type,datetime,id)
+#		
+#		connection.cursor().execute(sql)
+#		connection.commit()
+#	except:
+#		return error('edit failed')
+#	finally:
+#		if connection != None: 
+#			connection.close()
+#
+#	return success('edit succeeded')
 
 
 
 # delete note or event
-@app.route('/delete')
-def delete():
-	try:	
-		connection = setup_db_conn()
-		input  = request.json		
-		
-		type = input['type'].getvalue
-		id   = input['id'].getvalue	
+#@app.route('/delete')
+#def delete():
+#	connection = None	
+#	try:	
+#		connection = setup_db_conn()
+#		input  = request.get_json()		
+#		
+#		type = input['type'].getvalue
+#		id   = input['id'].getvalue	
+#
+#		sql = "DELETE FROM %s WHERE id = %s" % (type, id)
+#
+#		connection.cursor().execute(sql)
+#		connection.commit()
+#	except:
+#		return error('delete failed')
+#	finally:
+#		if connection != None: 
+#			connection.close()
+#	return success('delete succeeded')
 
-		sql = "DELETE FROM %s WHERE id = %s" % (type, id)
-
-		connection.cursor().execute(sql)
-		connection.commit()
-	except:
-		return error('delete failed')
-	finally:
-		connection.close()
-	return success('delete succeeded')
 
 
-
-@app.route('/login')
+@app.route('/login',methods=['POST'])
 def login():
 	notes  = []
 	events = []	
-	
-	try:	
-		connection = setup_db_conn()
-		input  = request.json
+	connection = None
+	try:
+		connection = connect_to_db()
+		with connection.cursor() as cursor:	
+			input  = dict(request.get_json())
 
-		username = input['username'].getvalue
+			username = input['username']
 
-		sql = 'SELECT * FROM note WHERE username = %s' % (username)
-		cursor.execute(sql)
-		notes = cursor.fetchall()
+			sql = "SELECT * FROM note WHERE username = '%s'" % (username)
+			cursor.execute(sql)
+			notes = cursor.fetchall()
 		
-		sql = 'SELECT * FROM calendar WHERE username = %s' % (username)
-		cursor.execute(sql)
-		events = cursor.fetchall()
-	except:
+			sql = "SELECT * FROM event WHERE username = '%s'" % (username)
+			cursor.execute(sql)
+			events = cursor.fetchall()
+	except Exception as e:
+		print(e)
 		return error('login fetch all failed')
+	finally:
+		if connection != None: 
+			connection.close()	
 
 	return jsonify({'notes' : notes, 'events' : events})
 		

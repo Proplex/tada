@@ -1,0 +1,20 @@
+add1 = !curl \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d '{"type":"note", "username":"testuser", "text":"test text", "x":0, "y":0}' \
+	http://localhost:5000/add
+print(add1)
+
+add2 = !curl \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d '{"type":"event", "username":"testuser", "text":"test text", "datetime":"2017-01-01 01:01:00"}' \
+	http://localhost:5000/add
+print(add2)
+
+login = !curl \
+	-X POST \
+	-H "Content-Type: application/json" \
+	-d '{"username":"testuser"}' \
+	http://localhost:5000/login
+print(login)

@@ -1,9 +1,36 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify
+from flask_assets import Environment, Bundle
 import pymysql
 
-app = Flask(__name__,
-	    static_folder='/home/tada_user/tada/UI')
 
+
+app = Flask(__name__,
+	    template_folder='/home/tada_user/tada/UI',
+	    static_folder='/home/tada_user/tada/UI')
+assets = Environment(app)
+
+js = Bundle('fullcalendar/lib/moment.min.js',
+	    'fullcalendar/lib/jquery.min.js',
+	    'fullcalendar/fullcalendar.js',
+	    'note/note.js',
+	    'layout/scripts/bootstrap.js',
+	    'layout/scripts/bootstrap-datepicker.js',
+	    'layout/scripts/bootstrap-datetimepicker.js',
+	    'layout/scripts/jquery.backtotop.js',
+	    'layout/scripts/jquery.mobilemenu.js',
+	    'layout/scripts/jquery.placeholder.min.js',
+	    output='gen/packed.js')
+assets.register('js',js)
+
+css = Bundle('fullcalendar/fullcalendar.css',
+	     'layout/styles/layout.css',
+	     'layout/styles/bootstrap.css',
+	     'layout/styles/jquery-ui.css',
+	     'layout/styles/bootstrap-datepicker.css',
+	     'layout/styles/bootstrap-datetimepicker.css',
+	     'note/note.css',
+	     output='gen/packed.css')
+assets.register('css',css)
 
 # support methods
 
@@ -28,7 +55,7 @@ def error(message):
 
 @app.route('/')
 def root():
-	return app.send_static_file('index.html')
+	return render_template('index.html')
 
 # format for these requests
 

@@ -58,8 +58,8 @@ def add():
 			y = input['y']
 			sql = "INSERT INTO %s (username, title, text, x, y) VALUES ('%s', '%s','%s','%s','%s')" % (type,username,title,text,x,y)
 		elif (type == 'event'):
-			datetime = input['datetime']
-			sql = "INSERT INTO %s (username, text, datetime) VALUES ('%s', '%s', '%s')" % (type,username,text,datetime)
+			dt = input['dt']
+			sql = "INSERT INTO %s (username, text, dt) VALUES ('%s', '%s', '%s')" % (type,username,text,dt)
 		else:
 			raise Exception()
 		connection.cursor().execute(sql)

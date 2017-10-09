@@ -1,9 +1,14 @@
 <!-- <!DOCTYPE html> -->
 <html>
 <head>
-<title>Tada</title>
+<title>TaDa</title>
 <meta charset="utf-8">
+<!-- Boilerplate code that handles website on mobile devices -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+<!-- GOOGLE OAUTH -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id" content="275995304578-5k2tiodmufnlb9tkqjitaf5tq0its755.apps.googleusercontent.com">
 
 {% assets "js" %}
@@ -21,6 +26,10 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 
 <script type="text/javascript">
+  $(document).ready(function() {
+     
+  });
+
   // Function called when Save button in the Add New Event modal is pressed
   function addEvent() {
     // Take values in the Title and Date fields and put it in a new variable.
@@ -29,146 +38,162 @@
     var newElement = {title : titleOfNewEvent, start : dateOfNewEvent};
     // Add new event to the full calendar and render it.
     $('#calendar_full').fullCalendar('renderEvent', newElement , true);
-    var sendToDB = [{"type":"add","format":"calendar","user": "", "text": titleOfNewEvent, "date": dateOfNewEvent}];
+    var sendToDB = [{"type":"event","username": "testuser2", "text": titleOfNewEvent, "dt": dateOfNewEvent}];
     $.ajax({
-      url: '/cgi_bin/inputselector.py',
+      url: 'http://0.0.0.0:5000/add',
       type: "post",
       data: {"events": sendToDB},
       dataType: "json",
       contentType: "application/json",
-      success: function() {
+      success: function(response) {
         // If the JSON object was sent successfully, remove the contents of the modal inputs
         // Additionally we can have a separate notification...
         document.getElementById("eventTitle").value = "";
         document.getElementById("datetimepickerCalendar").value = "";
-      }
+        var serverResponse = JSON.parse(response);
+        console.log(serverResponse.success);
+      },
+      error: function(response) {
+        var serverResponse = JSON.parse(response);
+        console.log(serverResponse.error);
+      },
     });
   }
-  function onSignIn(googleUser) {
-    //var profile = googleUser.getBasicProfile();
-    //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    //console.log('Name: ' + profile.getName());
-    //console.log('Image URL: ' + profile.getImageUrl());
-    //console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    $.ajax({
-      url: '',
-      type: "post",
-      data: {"email": profile.getEmail()},
-      //dataType: "json",
-      //contentType: "application/json",
-      success: function() {
-        // render full page
 
-      }
+
+  function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    var email = profile.getEmail();
+    console.log('Email: ' + email);
+
+    $.ajax({
+      url: 'http://0.0.0.0:5000/login',
+      type: "post",
+      data: {"email": email},
+      dataType: "json",
+      contentType: "application/json",
+      success: function(response) {
+        document.getElementById("navbar").style.display = "";
+        document.getElementById("noteCalendarDivision").style.display = "";
+        document.getElementById("startupPage").style.display = "none";
+
+        var userData = JSON.parse(response);
+        var eventData = [];
+        for (i = 0; i < userData.events.length; i++) {
+          eventData.concat({title : '' + userData.events[i].text, start : '' + userData.events[i].dt});
+        }
+        createCalendar(eventData);
+      },
+      error: function(response) {
+        var serverResponse = JSON.parse(response);
+        console.log(serverResponse.error);
+      },
     });
   }
-  $(document).ready(function() {
-    // $("#datetimepickerCalendar").datetimepicker();
+
+  function signInFake(googleUser) {
+    console.log('Logged in');
+    document.getElementById("navbar").style.display = "";
+    document.getElementById("noteCalendarDivision").style.display = "";
+    document.getElementById("startupPage").style.display = "none";
+    createCalendar();
+  }
+
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+
+  function createCalendar(eventData) {
     $('#calendar_full').fullCalendar({
       customButtons: {
         addNewEvent: {
-            text: 'Add New Event',
-            click: function() {
-              //Show the modal when the custom button is pressed
-              $('#addEventModal').modal('show');
+          text: 'Add New Event',
+          click: function() {
+            //Show the modal when the custom button is pressed
+            $('#addEventModal').modal('show');
             }
         }
       },
       header: {
-        left: 'prev,next addNewEvent',
+        left: 'prev,next',
         center: 'title',
-        right: 'month'
+        right: 'addNewEvent'
       },
-      events: events
-    });
+      events: eventData,
+      height: 650, // would like to change this to parent
+      fixedWeekCount: false
+    });   
+  }
 
-  });
 </script> 
 </head>
-  
-<body id="top">
-<!-- ################################################################################################ -->
-<!-- Top Background Image Wrapper -->
-<div class="bgded" style="background-image:url('images/demo/backgrounds/01.png');"> 
-  <!-- ################################################################################################ -->
-  <div class="wrapper overlay">
-    <header id="header" class="hoc clear">
-      <!-- <nav id="mainav" class="clear">  -->
-        <!-- ################################################################################################ -->
-        <div style="height:20px;" id="logo"> 
-            <!-- ################################################################################################ -->
-            <h1><a href="index.html">Tada</a></h1>
-            <!-- ################################################################################################ -->
-          </div>
-        <!-- ################################################################################################ -->
-      <!-- </nav> -->
-    </header>
+
+<body>
+  <!-- Upon visiting TaDa page, user will be greeted with a start up page to login with Google -->
+  <div id = "startupPage">
+    <h1 class="text-center" style="padding-top:15%">Welcome to TaDa! <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button>
+    </h1>
+    <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
   </div>
-   <!-- ################################################################################################ -->
-  <div id="pageintro" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-    <article>
-    <!-- ################################################################################################ -->
-    <!-- ################################################################################################ -->
-    <!-- ##################################    NOTE DIVISION    ######################################### -->
-    <!-- ################################################################################################ -->
-    <!-- ################################################################################################ -->
-        <div id="note-div">
-    
-            <a href="javascript:;" class="buttonnote" id="add_new">Add Note</a>
-            <div id="board">
-              
-            </div>
+  <!-- For navbar -->
+  <nav id = "navbar" class="navbar navbar-toggleable-md navbar-inverse bg-inverse" style="display:none;">
+    <a class="navbar-brand navbar-center"style="font-size: 30px; color: white; font-weight: bold;">TaDa</a>
+
+    <div class="collapse navbar-collapse">
+      <form class="form-inline my-2 my-lg-0">
+        <button class="btn btn-danger my-2 my-sm-0" onclick="signOut()">Sign Out</button>
+      </form>
+    </div>
+  </nav>
+  <!-- Notes and Calendar division -->
+  <div id = "noteCalendarDivision" class = "container-fluid" style = "padding-top: 20px; display:none;">
+    <div class = "row">
+      <div class="col-md-4">
+        <a href="javascript:;" class="buttonnote" id="add_new">Add Note</a>
+        <a href="javascript:;" class="buttonnote" id="save_new">Save Note</a>        
+        <div id="board">
+            <!-- <ul id="notes">
+            </ul> -->
         </div>
-    <!-- ################################################################################################ -->
-    <!-- ################################################################################################ -->
-    <!-- ################################    Calendar DIVISION    ####################################### -->
-    <!-- ################################################################################################ -->
-    <!-- ################################################################################################ -->
-        <div id="calendar-div">
-          <!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+      </div>
+      <div class="col-md-8">
           <div id='calendar_full'></div>
-        </div>
-
-    </article>
-  </div>
-</div>
-<!-- End Top Background Image Wrapper -->
-
-<!-- Modal found in the calendar. Opened when 'Add New Event' button is pressed-->
-<div id="addEventModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Add Event to Calendar</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-inline">
-          <label for="eventTitle" class="col-sm-4 control-label">Title: </label>
-          <div class="col-sm-8">
-              <input type="text" id="eventTitle" name="eventTitle" class="form-control">
-          </div>
-        </div>
-        <div class="form-inline" style="padding-top: 10px">
-          <label for="datetimepickerCalendar" class="col-sm-4 control-label">Date: </label>
-          <div class="col-sm-8">
-              <input type="text" id="datetimepickerCalendar" name="datetimepickerCalendar" class="form-control">
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <!-- addEvent() is the function called when the Save button is pressed -->
-        <!-- Modal will close after either button is pressed -->
-        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="addEvent()">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
-
   </div>
-</div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+
+  <!-- Modal found in the calendar. Opened when 'Add New Event' button is pressed-->
+  <div id="addEventModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add Event to Calendar</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-inline">
+            <label for="eventTitle" class="col-sm-4 control-label">Title: </label>
+            <div class="col-sm-8">
+                <input type="text" id="eventTitle" name="eventTitle" class="form-control">
+            </div>
+          </div>
+          <div class="form-inline" style="padding-top: 10px">
+            <label for="datetimepickerCalendar" class="col-sm-4 control-label">Date: </label>
+            <div class="col-sm-8">
+                <input type="text" id="datetimepickerCalendar" name="datetimepickerCalendar" class="form-control" placeholder="YYYY-MM-DD HH:MM">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- addEvent() is the function called when the Save button is pressed -->
+          <!-- Modal will close after either button is pressed -->
+          <button type="button" class="btn btn-success" data-dismiss="modal" onclick="addEvent()">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html> 

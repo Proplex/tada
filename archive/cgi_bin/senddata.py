@@ -3,7 +3,7 @@ import cgi, cgitb, json, pymysql.cursors
 def setup_db_connect():
 	dbconn = pymysql.connect(host='localhost',
 				 user='root',
-				 password='defaultmysqlpassword',
+				 password='',
 				 db='db',
 				 charset='utf8mb4',
 				 cursorclass=pymysql.cursors.DictCursor)
@@ -22,12 +22,12 @@ def main():
 	
 	try:
 		with connection.cursor(pymysql.cursors.DictCursor)() as cursor:
-			cmd = 'SELECT * FROM note WHERE username=%s'
-			cursor.execute(cmd % (user))
+			cmd = 'SELECT * FROM note WHERE username=%s' % (user)
+			cursor.execute(cmd)
 			notes = cursor.fetchall()
 		
-			cmd = 'SELECT * FROM calendar WHERE username=%s'
-			cursor.execute(cmd % (user))
+			cmd = 'SELECT * FROM calendar WHERE username=%s' % (user)
+			cursor.execute(cmd)
 			events = cursor.fetchall()
 	except:
 		print(json.JSONEncoder().encode({'error',"Unable to load data"}))

@@ -57,42 +57,121 @@
 })(jQuery);
 
 
-var noteTemp =  '<div class="note">'
-				+	'<a href="javascript:;" class="button remove">X</a>'
-				+ 	'<div class="note_cnt">'
-				+		'<textarea class="title" placeholder="Enter note title"></textarea>'
-				+ 		'<textarea class="cnt" placeholder="Enter note description"></textarea>'
-				+	'</div> '
-				+'</div>';
-
 var noteZindex = 1;
 function deleteNote(){
-    $(this).parent('.note').hide("puff",{ percent: 133}, 250);
+        $(this).parent('.note').hide("puff",{ percent: 133}, 250);
+};
+
+function loadNote(title, content) {
+    var noteTemp =  '<div class="note">'
+                        +'<a href="javascript:;" class="button remove">X</a>'
+                        + 	'<div class="note_cnt">'
+                        +		'<textarea class="title" placeholder="Testing Title"></textarea>'
+                        + 		'<textarea class="cnt" placeholder="Testing Content"></textarea>'
+                        +	'</div> '
+                        +'</div>';
+    // notes.append($(noteTemp));
+
+    newNote.find("textarea.title").val(title);
+    newNote.find("textarea.cnt").val(content);
+
+    $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+        function(){
+            $(this).zIndex(++noteZindex);
+        });
+    
+        $('.remove').click(deleteNote);
+        $('textarea').autogrow();
+                
+        $('.note')
+            return false; 
 };
 
 function newNote() {
-  $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
-    function(){
-       $(this).zIndex(++noteZindex);
-    });
- 
-	$('.remove').click(deleteNote);
-	$('textarea').autogrow();
-	
-  $('.note')
-	return false; 
+    var noteTemp =  '<div class="note">'
+                    +'<a href="javascript:;" class="button remove">X</a>'
+                    + 	'<div class="note_cnt">'
+                    +		'<textarea class="title" placeholder="Enter note title"></textarea>'
+                    + 		'<textarea class="cnt" placeholder="Enter note description"></textarea>'
+                    +	'</div> '
+                    +'</div>';
+
+    $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+        function(){
+            $(this).zIndex(++noteZindex);
+        });
+
+        $('.remove').click(deleteNote);
+        $('textarea').autogrow();
+            
+        $('.note')
+            return false; 
+};
+
+function saveNote() {
+        var notesArray = new Array();
+        // for each of the notes add a bespoke note object to the array
+        notes.find("li > div").each(function (i, e) {
+            // save the class attribute of the div, as well as the text for the title and content text areas
+            // var colourClass = $(e).attr("class");
+            var title = $(e).find("textarea.title") 
+            var content = $(e).find("textarea.cnt");
+     
+            console.log(title);
+            console.log(content);
+            console.log('testing');
+            
+            notesArray.push({ Index: i, Title: title.val(), Content: content.val()});
+        });
+     
+        // json encode it
+        var jsonStr = JSON.stringify(notesArray);
+     
+        // and save the json string into local storage
+        localStorage.setItem("notes", jsonStr);
+     
+        // info the user it's done
+        alert("Notes saved");
 };
 
 
-
+var notes;
+var count  = 0;
+// has to populate stored data from the database
 $(document).ready(function() {
     
     $("#board").height($(document).height());
+//     Comment out when it's pefectly working    
+//     notes = $("#notes"); 
+//     // notes = $("#board"); // get references to the 'notes' list
+ 
+//     // load notes from local storage if one's available
+//     var storedNotes = localStorage.getItem("notes");
+//     if (storedNotes) {
+//     // passes the stored json back into an array of note objects
+//         var notesArray = JSON.parse(storedNotes);
+//         count = notesArray.length;
+ 
+//         for (var i = 0; i < count; i++) {
+//             var storedNote = notesArray[i];
+//             loadNote(storedNote.Title, storedNote.Content);
+//         }
+// }
+
+    $("#add_new").click(newNote);  
     
-    $("#add_new").click(newNote);
-    
-    $('.remove').click(deleteNote);
-    newNote();
-	  
+    $("#save_note").click(saveNote);
+
     return false;
 });
+
+
+    // alert("Top: " + getOffset(note1).left + " Left: " + getOffset(note1).right);
+    // getOffset(newNote).left;
+    // getOffset(newNote).right;
+    
+// $("button").click(function(){
+//     var x = $("p").position();
+//     alert("Top: " + x.top + " Left: " + x.left);
+// });
+

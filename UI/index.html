@@ -46,6 +46,8 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+
+    
     $('#calendar_full').fullCalendar({
       customButtons: {
         addNewEvent: {
@@ -125,7 +127,6 @@
     });  
   }
 
-
 </script> 
 </head>
 
@@ -144,7 +145,10 @@
     <div class = "row">
       <div class="col-md-4">
         <a href="javascript:;" class="buttonnote" id="add_new">Add Note</a>
+        <a href="javascript:;" class="buttonnote" id="save_new">Save Note</a>        
         <div id="board">
+            <!-- <ul id="notes">
+            </ul> -->
         </div>
       </div>
       <div class="col-md-8">

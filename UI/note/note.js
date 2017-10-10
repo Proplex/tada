@@ -83,7 +83,7 @@ function loadNote(title, content, ID) {
                         +	'</div> '
                         +'</div>';
 
-    IDarray.push('noteID'+ID.toString()); // push the added note's ID into the ID array
+    IDarray.push('noteID' + ID.toString()); // push the added note's ID into the ID array
     console.log('ID array: ' + IDarray); // print out current ID array
     
     $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
@@ -113,7 +113,7 @@ function newNote() {
                         +	'</div> '
                         +'</div>';
 
-        IDarray.push('noteID'+ID.toString()); // push the added note's ID into the ID array
+        IDarray.push('noteID' + ID.toString()); // push the added note's ID into the ID array
         console.log('ID array: ' + IDarray); // print out current ID array
                         
         $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
@@ -131,7 +131,7 @@ function newNote() {
 function saveNote() {
 
     console.log('Saving notes...');
-    
+
     // get all textarea ID for title named as titleID + number
     var IDtitles = $('textarea[id^="titleID"]').filter(
         function(){

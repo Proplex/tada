@@ -12,8 +12,7 @@ CREATE TABLE note(
   text VARCHAR(100),
   x INT,
   y INT,
-  titleID VARCHAR(10),
-  textID VARCHAR(10),
+  noteID VARCHAR(10),
   PRIMARY KEY (id)
 );
 

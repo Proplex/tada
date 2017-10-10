@@ -159,7 +159,7 @@ function saveNote() {
         console.log('Saved title: ' + eTitle);
         console.log('Saved text: ' + eText);   
 	
-	    var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "ID": eID}
+	    var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "noteID": eID}
 
         $.ajax({
             url: 'http://localhost:5000/add',

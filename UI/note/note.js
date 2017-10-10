@@ -148,16 +148,16 @@ function saveNote() {
         var tempTitle = IDtitles[i].id; // id of title of each note
         var tempText = IDtexts[i].id; // id of text of each note
 
-        console.log(tempTitle); 
-        console.log(tempText);
+        // console.log('Saved titleID: ' + tempTitle); 
+        // console.log('Saved textID: ' + tempText);
             
         var eTitle = document.getElementById(tempTitle).value; // get the value inside of the textarea.title of each note
         var eText = document.getElementById(tempText).value; // get the value inside of the textarea.text of each note
         var eID = tempTitle.replace('titleID',''); // extract only the ID string from the string of titleID (for loadNote)
                 
-        console.log(eTitle);
-        console.log(eText);   
-        console.log(eID);   
+        console.log('Saved ID: ' + eID);           
+        console.log('Saved title: ' + eTitle);
+        console.log('Saved text: ' + eText);   
 	
 	    var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "ID": eID}
 

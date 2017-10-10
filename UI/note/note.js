@@ -58,49 +58,43 @@
 
 /*----------------------------------Variables----------------------------------*/
 var noteZindex = 1;
-var IDarray = [];
-var ID = 0;
-var notes;
-var count  = 0;
+var IDarray = []; // keep track of which note is present and which is deleted
 /*----------------------------------Delete Note----------------------------------*/
 function deleteNote(){
-        $(this).parents('.note').remove();
+    $(this).parents('.note').remove(); // remove the note on click of corresponding x button
         
-        var deleteID = $(this).parents('.note')[0].id; // == 'noteID' + ID.toString()
-        var arrayLength = IDarray.length;
-        ID = arrayLength + 1;
-        var index = IDarray.indexOf(deleteID);
-        if (index > -1) {
-            IDarray.splice(index, 1);
-        }
+    var deleteID = $(this).parents('.note')[0].id; // == get 'noteID' + ID.toString() of deleted note
+    var index = IDarray.indexOf(deleteID); // get index of deleted note's ID
+    if (index > -1) {
+        IDarray.splice(index, 1); // remove the deleted note's ID from the ID array
+    }
         
-        console.log($(this).parents('.note')[0].id); // print out the deleted ID                        
-        console.log(IDarray);
+    console.log('Deleted ID: ' + $(this).parents('.note')[0].id); // print out the deleted ID                        
+    console.log('ID array: ' + IDarray); // print out current ID array
 };
 /*----------------------------------Load Note----------------------------------*/
-function loadNote(title, content, titleID, textID) {
-    var noteTemp =  '<div class="note" id="noteID">'
+function loadNote(title, content, ID) {
+    ID = parseInt(ID); // convert ID from string to int
+    var noteTemp =  '<div class="note" id="noteID' + ID.toString() + '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
-                        + 	'<div class="note_cnt" id="note_cntID">'
-                        +		'<textarea class="title" id=' + ID.toString() + '" placeholder="Testing title">'+title+'</textarea>'
-                        + 		'<textarea class="cnt" id="note_textID' + ID.toString() + '" placeholder="Testing description">'+content+'</textarea>'
+                        + 	'<div class="note_cnt" id="note_cntID' + ID.toString() + '">'
+                        +		'<textarea class="title" id="titleID' + ID.toString() + '" placeholder="Testing title">'+title+'</textarea>'
+                        + 		'<textarea class="cnt" id="textID' + ID.toString() + '" placeholder="Testing description">'+content+'</textarea>'
                         +	'</div> '
                         +'</div>';
-    // notes.append($(noteTemp));
 
-    // newNote.find("textarea.title").val(title);
-    // newNote.find("textarea.cnt").val(content);
-
+    IDarray.push('noteID'+ID.toString()); // push the added note's ID into the ID array
+    console.log('ID array: ' + IDarray); // print out current ID array
+    
     $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function(){
             $(this).zIndex(++noteZindex);
-        });
+        }); // show the loaded note to the UI
     
-        $('.remove').click(deleteNote);
-        $('textarea').autogrow();
-                
-        $('.note')
-            return false; 
+    $('.remove').click(deleteNote); // onclick of delete button, trigger the deleteNote function
+    $('textarea').autogrow(); // text area grows automatically       
+    $('.note')
+    return false; 
 };
 /*----------------------------------New Note----------------------------------*/
 function newNote() {
@@ -108,98 +102,76 @@ function newNote() {
     var arrayLength = IDarray.length;
 
     if(arrayLength < 3){
-        ID = ID + 1;
-                
+
+        var ID = Math.floor((Math.random() * 1000) + 1); // random number between 1 and 1000
+        
         var noteTemp =  '<div class="note" id="noteID' + ID.toString() + '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
                         + 	'<div class="note_cnt" id="note_cntID' + ID.toString() + '">'
-                        +		'<textarea class="title" id="note_titleID' + ID.toString() + '" placeholder="Enter note title"></textarea>'
-                        + 		'<textarea class="cnt" id="note_textID' + ID.toString() + '" placeholder="Enter note description"></textarea>'
+                        +		'<textarea class="title" id="titleID' + ID.toString() + '" placeholder="Enter note title"></textarea>'
+                        + 		'<textarea class="cnt" id="textID' + ID.toString() + '" placeholder="Enter note description"></textarea>'
                         +	'</div> '
                         +'</div>';
 
-        IDarray.push('noteID'+ID.toString());
-        console.log(IDarray);
-
+        IDarray.push('noteID'+ID.toString()); // push the added note's ID into the ID array
+        console.log('ID array: ' + IDarray); // print out current ID array
+                        
         $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
             function(){
                 $(this).zIndex(++noteZindex);
-            });
+            }); // show the new note to the UI
             
-            $('.remove').click(deleteNote);
-            
-            $('textarea').autogrow();
-                
-            $('.note')
-                return false; 
+        $('.remove').click(deleteNote); // onclick of delete button, trigger the deleteNote function
+        $('textarea').autogrow(); // text area grows automatically              
+        $('.note')
+        return false; 
     }
 };
 /*----------------------------------Save Note----------------------------------*/
 function saveNote() {
-        console.log('Accessing save note');
+
+    console.log('Saving notes...');
     
-        var notesArray = new Array();
+    // get all textarea ID for title named as titleID + number
+    var IDtitles = $('textarea[id^="titleID"]').filter(
+        function(){
+            return this.id.match(/\d+$/);
+        });
 
-        // get all textarea ID for title named as note_titleID + number
-        var IDtitles = $('textarea[id^="note_titleID"]').filter(
-            function(){
-               return this.id.match(/\d+$/);
-            });
-
-        // get all textarea ID for text named as note_textID + number
-        var IDtexts = $('textarea[id^="note_textID"]').filter(
-            function(){
+    // get all textarea ID for text named as textID + number
+    var IDtexts = $('textarea[id^="textID"]').filter(
+        function(){
            return this.id.match(/\d+$/);
-            });
+        });
         
-        for(var i = 0; i< IDtitles.length; i++){
-            var tempTitle = IDtitles[i].id; // id of title of each note
-            var tempText = IDtexts[i].id; // id of text of each note
+    for(var i = 0; i< IDtitles.length; i++){
+        var tempTitle = IDtitles[i].id; // id of title of each note
+        var tempText = IDtexts[i].id; // id of text of each note
 
-             console.log(tempTitle);
-             console.log(tempText);
+        console.log(tempTitle); 
+        console.log(tempText);
             
-            var eTitle = document.getElementById(tempTitle).value;
-            var eText = document.getElementById(tempText).value;
+        var eTitle = document.getElementById(tempTitle).value; // get the value inside of the textarea.title of each note
+        var eText = document.getElementById(tempText).value; // get the value inside of the textarea.text of each note
+        var eID = tempTitle.replace('titleID',''); // extract only the ID string from the string of titleID (for loadNote)
                 
-             console.log(eTitle);
-             console.log(eText);   
+        console.log(eTitle);
+        console.log(eText);   
+        console.log(eID);   
 	
-	var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "titleID": tempTitle, "textID": tempText}
+	    var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "ID": eID}
 
-            $.ajax({
-                url: 'http://localhost:5000/add',
-                type: "post",
-                data: JSON.stringify(toSend),
-                dataType: "json",
-                contentType: "application/json",
-                success: function() {
-                  // If the JSON object was sent successfully, alert that notes are saved...
-                  // alert("Notes saved");      
-                  console.log('Successfully saved the notes');
-                }
-              });
+        $.ajax({
+            url: 'http://localhost:5000/add',
+            type: "post",
+            data: JSON.stringify(toSend),
+            dataType: "json",
+            contentType: "application/json",
+            success: function() {
+            // If the JSON object was sent successfully, alert that notes are saved...
+            console.log('Successfully saved the notes');
+            }   
+        });
 
-            // notesArray.push({ Index: i, Title: eTitle, Content: eText});                   
-            // console.log(notesArray);
-        } 
-        // var arrayLength = notesArray.length;
-
-        // for (var i = 0; i < arrayLength; i++) {
-        //     var tempNote = notesArray[i];
-        //     var titleofNote = tempNote.Title
-        //     var contentofNote = tempNote.Content
-        //     $.ajax({
-        //       url: '/cgi_bin/inputselector.py',
-        //       type: "post",
-        //       data: {"type":"note","username":"testuser","title": titleofNote, "text": contentofNote, "x": 0, "y": 0 },
-        //       dataType: "json",
-        //       contentType: "application/json",
-        //       success: function() {
-        //         // If the JSON object was sent successfully, alert that notes are saved...
-        //         alert("Notes saved");      
-        //         console.log('Successfully saved the notes');
-        //       }
-        //     });
-        // }
+    } 
 };

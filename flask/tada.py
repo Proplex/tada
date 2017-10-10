@@ -85,7 +85,9 @@ def add():
 			title = input['title']
 			x = input['x']
 			y = input['y']
-			sql = "INSERT INTO %s (username, title, text, x, y) VALUES ('%s', '%s','%s','%s','%s')" % (type,username,title,text,x,y)
+			titleID = input['titleID']
+			textID = input['textID']
+			sql = "INSERT INTO %s (username, title, text, x, y) VALUES ('%s', '%s','%s','%s','%s','%s','%s')" % (type,username,title,text,x,y,titleID,textID)
 		elif (type == 'event'):
 			dt = input['dt']
 			sql = "INSERT INTO %s (username, text, dt) VALUES ('%s', '%s', '%s')" % (type,username,text,dt)

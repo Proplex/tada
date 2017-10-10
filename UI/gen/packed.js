@@ -17909,24 +17909,40 @@ return FC; // export for Node/CommonJS
     };
 })(jQuery);
 
-
+/*----------------------------------Variables----------------------------------*/
 var noteZindex = 1;
+var IDarray = [];
+var ID = 0;
+var notes;
+var count  = 0;
+/*----------------------------------Delete Note----------------------------------*/
 function deleteNote(){
-        $(this).parent('.note').hide("puff",{ percent: 133}, 250);
+        $(this).parents('.note').remove();
+        
+        var deleteID = $(this).parents('.note')[0].id; // == 'noteID' + ID.toString()
+        var arrayLength = IDarray.length;
+        ID = arrayLength + 1;
+        var index = IDarray.indexOf(deleteID);
+        if (index > -1) {
+            IDarray.splice(index, 1);
+        }
+        
+        console.log($(this).parents('.note')[0].id); // print out the deleted ID                        
+        console.log(IDarray);
 };
-
+/*----------------------------------Load Note----------------------------------*/
 function loadNote(title, content) {
-    var noteTemp =  '<div class="note">'
+    var noteTemp =  '<div class="note" id="noteID' + ID.toString() + '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
-                        + 	'<div class="note_cnt">'
-                        +		'<textarea class="title" placeholder="Testing Title"></textarea>'
-                        + 		'<textarea class="cnt" placeholder="Testing Content"></textarea>'
+                        + 	'<div class="note_cnt" id="note_cntID' + ID.toString() + '">'
+                        +		'<textarea class="title" id="note_titleID' + ID.toString() + '" placeholder="Testing title">'+title+'</textarea>'
+                        + 		'<textarea class="cnt" id="note_textID' + ID.toString() + '" placeholder="Testing description">'+content+'</textarea>'
                         +	'</div> '
                         +'</div>';
     // notes.append($(noteTemp));
 
-    newNote.find("textarea.title").val(title);
-    newNote.find("textarea.cnt").val(content);
+    // newNote.find("textarea.title").val(title);
+    // newNote.find("textarea.cnt").val(content);
 
     $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function(){
@@ -17939,95 +17955,107 @@ function loadNote(title, content) {
         $('.note')
             return false; 
 };
-
+/*----------------------------------New Note----------------------------------*/
 function newNote() {
-    var noteTemp =  '<div class="note">'
-                    +'<a href="javascript:;" class="button remove">X</a>'
-                    + 	'<div class="note_cnt">'
-                    +		'<textarea class="title" placeholder="Enter note title"></textarea>'
-                    + 		'<textarea class="cnt" placeholder="Enter note description"></textarea>'
-                    +	'</div> '
-                    +'</div>';
 
-    $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
-        function(){
-            $(this).zIndex(++noteZindex);
-        });
+    var arrayLength = IDarray.length;
 
-        $('.remove').click(deleteNote);
-        $('textarea').autogrow();
+    if(arrayLength < 3){
+        ID = ID + 1;
+                
+        var noteTemp =  '<div class="note" id="noteID' + ID.toString() + '">'
+                        +'<a href="javascript:;" class="button remove">X</a>'
+                        + 	'<div class="note_cnt" id="note_cntID' + ID.toString() + '">'
+                        +		'<textarea class="title" id="note_titleID' + ID.toString() + '" placeholder="Enter note title"></textarea>'
+                        + 		'<textarea class="cnt" id="note_textID' + ID.toString() + '" placeholder="Enter note description"></textarea>'
+                        +	'</div> '
+                        +'</div>';
+
+        IDarray.push('noteID'+ID.toString());
+        console.log(IDarray);
+
+        $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+            function(){
+                $(this).zIndex(++noteZindex);
+            });
             
-        $('.note')
-            return false; 
+            $('.remove').click(deleteNote);
+            
+            $('textarea').autogrow();
+                
+            $('.note')
+                return false; 
+    }
 };
-
+/*----------------------------------Save Note----------------------------------*/
 function saveNote() {
+        console.log('Accessing save note');
+    
         var notesArray = new Array();
-        // for each of the notes add a bespoke note object to the array
-        notes.find("li > div").each(function (i, e) {
-            // save the class attribute of the div, as well as the text for the title and content text areas
-            // var colourClass = $(e).attr("class");
-            var title = $(e).find("textarea.title") 
-            var content = $(e).find("textarea.cnt");
-     
-            console.log(title);
-            console.log(content);
-            console.log('testing');
+
+        // get all textarea ID for title named as note_titleID + number
+        var IDtitles = $('textarea[id^="note_titleID"]').filter(
+            function(){
+               return this.id.match(/\d+$/);
+            });
+
+        // get all textarea ID for text named as note_textID + number
+        var IDtexts = $('textarea[id^="note_textID"]').filter(
+            function(){
+           return this.id.match(/\d+$/);
+            });
+        
+        for(var i = 0; i< IDtitles.length; i++){
+            var tempTitle = IDtitles[i].id; // id of title of each note
+            var tempText = IDtexts[i].id; // id of text of each note
+
+             console.log(tempTitle);
+             console.log(tempText);
             
-            notesArray.push({ Index: i, Title: title.val(), Content: content.val()});
-        });
-     
-        // json encode it
-        var jsonStr = JSON.stringify(notesArray);
-     
-        // and save the json string into local storage
-        localStorage.setItem("notes", jsonStr);
-     
-        // info the user it's done
-        alert("Notes saved");
+            var eTitle = document.getElementById(tempTitle).value;
+            var eText = document.getElementById(tempText).value;
+                
+             console.log(eTitle);
+             console.log(eText);   
+	
+	var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0 }
+
+            $.ajax({
+                url: 'http://localhost:5000/add',
+                type: "post",
+                data: JSON.stringify(toSend),
+                dataType: "json",
+                contentType: "application/json",
+                success: function() {
+                  // If the JSON object was sent successfully, alert that notes are saved...
+                  alert("Notes saved");      
+                  console.log('Successfully saved the notes');
+                }
+              });
+
+            // notesArray.push({ Index: i, Title: eTitle, Content: eText});                   
+            // console.log(notesArray);
+        } 
+        // var arrayLength = notesArray.length;
+
+        // for (var i = 0; i < arrayLength; i++) {
+        //     var tempNote = notesArray[i];
+        //     var titleofNote = tempNote.Title
+        //     var contentofNote = tempNote.Content
+        //     $.ajax({
+        //       url: '/cgi_bin/inputselector.py',
+        //       type: "post",
+        //       data: {"type":"note","username":"testuser","title": titleofNote, "text": contentofNote, "x": 0, "y": 0 },
+        //       dataType: "json",
+        //       contentType: "application/json",
+        //       success: function() {
+        //         // If the JSON object was sent successfully, alert that notes are saved...
+        //         alert("Notes saved");      
+        //         console.log('Successfully saved the notes');
+        //       }
+        //     });
+        // }
 };
-
-
-var notes;
-var count  = 0;
-// has to populate stored data from the database
-$(document).ready(function() {
-    
-    $("#board").height($(document).height());
-//     Comment out when it's pefectly working    
-//     notes = $("#notes"); 
-//     // notes = $("#board"); // get references to the 'notes' list
- 
-//     // load notes from local storage if one's available
-//     var storedNotes = localStorage.getItem("notes");
-//     if (storedNotes) {
-//     // passes the stored json back into an array of note objects
-//         var notesArray = JSON.parse(storedNotes);
-//         count = notesArray.length;
- 
-//         for (var i = 0; i < count; i++) {
-//             var storedNote = notesArray[i];
-//             loadNote(storedNote.Title, storedNote.Content);
-//         }
-// }
-
-    $("#add_new").click(newNote);  
-    
-    $("#save_note").click(saveNote);
-
-    return false;
-});
-
-
-    // alert("Top: " + getOffset(note1).left + " Left: " + getOffset(note1).right);
-    // getOffset(newNote).left;
-    // getOffset(newNote).right;
-    
-// $("button").click(function(){
-//     var x = $("p").position();
-//     alert("Top: " + x.top + " Left: " + x.left);
-// });
-
 
 /*!
  * Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)

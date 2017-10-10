@@ -4427,10 +4427,6 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d9534f' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E");
 }
 
-.hidden {
-  display:none;
-}
-
 .form-inline {
   display: -webkit-box;
   display: -webkit-flex;
@@ -5869,15 +5865,6 @@ tbody.collapse.show {
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
-}
-
-.navbar-center
-{
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: 5;
-    text-align: center;
 }
 
 .navbar-nav .nav-link {
@@ -7331,7 +7318,6 @@ button.close {
 
 .modal-open {
   overflow: hidden;
-  padding-right: 0 !important
 }
 
 .modal {

@@ -59,6 +59,7 @@
 /*----------------------------------Variables----------------------------------*/
 var noteZindex = 1;
 var IDarray = []; // keep track of which note is present and which is deleted
+var checkID = []; 
 /*----------------------------------Delete Note----------------------------------*/
 function deleteNote(){
     $(this).parents('.note').remove(); // remove the note on click of corresponding x button
@@ -85,7 +86,8 @@ function loadNote(title, content, ID) {
 
     IDarray.push('noteID' + ID.toString()); // push the added note's ID into the ID array
     console.log('ID array: ' + IDarray); // print out current ID array
-    
+    checkID.push(ID.toString());
+
     $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function(){
             $(this).zIndex(++noteZindex);
@@ -129,7 +131,6 @@ function newNote() {
 };
 /*----------------------------------Save Note----------------------------------*/
 function saveNote() {
-
     console.log('Saving notes...');
 
     // get all textarea ID for title named as titleID + number
@@ -145,6 +146,8 @@ function saveNote() {
         });
         
     for(var i = 0; i< IDtitles.length; i++){
+        var checksum = 0;
+
         var tempTitle = IDtitles[i].id; // id of title of each note
         var tempText = IDtexts[i].id; // id of text of each note
 
@@ -157,21 +160,29 @@ function saveNote() {
                 
         console.log('Saved ID: ' + eID);           
         console.log('Saved title: ' + eTitle);
-        console.log('Saved text: ' + eText);   
-	
-	    var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "noteID": eID}
+        console.log('Saved text: ' + eText);
 
-        $.ajax({
-            url: 'http://localhost:5000/add',
-            type: "post",
-            data: JSON.stringify(toSend),
-            dataType: "json",
-            contentType: "application/json",
-            success: function() {
-            // If the JSON object was sent successfully, alert that notes are saved...
-            console.log('Successfully saved the notes');
-            }   
-        });
+        
+        for(var j = 0; j < checkID.length; j++){
+            if(checkID[j] == eID){
+                checksum = 1; // don't send the data to dabase since it already exists
+            }
+        }
 
+        if(checksum == 0){
+            var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "noteID": eID}
+            
+            $.ajax({
+                url: 'http://localhost:5000/add',
+                type: "post",
+                data: JSON.stringify(toSend),
+                dataType: "json",
+                contentType: "application/json",
+                success: function() {
+                // If the JSON object was sent successfully, alert that notes are saved...
+                console.log('Successfully saved the notes');
+                }   
+            });
+        }
     } 
 };

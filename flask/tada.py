@@ -5,8 +5,8 @@ import pymysql
 
 
 app = Flask(__name__,
-	    template_folder='/home/tada_user/tada/UI',
-	    static_folder='/home/tada_user/tada/UI')
+	    template_folder='/tada/UI',
+	    static_folder='/tada/UI')
 assets = Environment(app)
 
 js = Bundle('fullcalendar/lib/moment.min.js',

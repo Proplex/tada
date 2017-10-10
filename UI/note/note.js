@@ -64,33 +64,32 @@ var notes;
 var count  = 0;
 /*----------------------------------Delete Note----------------------------------*/
 function deleteNote(){
-        // $(this).parent('.note').hide("puff",{ percent: 133}, 250);  
         $(this).parents('.note').remove();
         
-            var deleteID = $(this).parents('.note')[0].id; // == 'noteID' + ID.toString()
-            var arrayLength = IDarray.length;
-            ID = arrayLength + 1;
-            var index = IDarray.indexOf(deleteID);
-            if (index > -1) {
-                IDarray.splice(index, 1);
-            }
+        var deleteID = $(this).parents('.note')[0].id; // == 'noteID' + ID.toString()
+        var arrayLength = IDarray.length;
+        ID = arrayLength + 1;
+        var index = IDarray.indexOf(deleteID);
+        if (index > -1) {
+            IDarray.splice(index, 1);
+        }
         
-            console.log($(this).parents('.note')[0].id); // print out the deleted ID                        
-            console.log(IDarray);
+        console.log($(this).parents('.note')[0].id); // print out the deleted ID                        
+        console.log(IDarray);
 };
 /*----------------------------------Load Note----------------------------------*/
 function loadNote(title, content) {
     var noteTemp =  '<div class="note" id="noteID' + ID.toString() + '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
                         + 	'<div class="note_cnt" id="note_cntID' + ID.toString() + '">'
-                        +		'<textarea class="title" id="note_titleID' + ID.toString() + '" placeholder="Testing title"></textarea>'
-                        + 		'<textarea class="cnt" id="note_textID' + ID.toString() + '" placeholder="Testing description"></textarea>'
+                        +		'<textarea class="title" id="note_titleID' + ID.toString() + '" placeholder="Testing title">'+title+'</textarea>'
+                        + 		'<textarea class="cnt" id="note_textID' + ID.toString() + '" placeholder="Testing description">'+content+'</textarea>'
                         +	'</div> '
                         +'</div>';
     // notes.append($(noteTemp));
 
-    newNote.find("textarea.title").val(title);
-    newNote.find("textarea.cnt").val(content);
+    // newNote.find("textarea.title").val(title);
+    // newNote.find("textarea.cnt").val(content);
 
     $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function(){
@@ -207,22 +206,29 @@ function saveNote() {
 $(document).ready(function() {
     
     $("#board").height($(document).height());
-// //     Comment out when it's pefectly working    
-//     notes = $("#notes"); 
-//     // notes = $("#board"); // get references to the 'notes' list
- 
-//     // load notes from local storage if one's available
-//     var storedNotes = localStorage.getItem("notes");
-//     if (storedNotes) {
-//     // passes the stored json back into an array of note objects
-//         var notesArray = JSON.parse(storedNotes);
-//         count = notesArray.length;
- 
-//         for (var i = 0; i < count; i++) {
-//             var storedNote = notesArray[i];
-//             loadNote(storedNote.Title, storedNote.Content);
-//         }
-// }
+
+    $.ajax({
+        url: 'http://localhost:5000/login',
+        type: "post",
+        data: JSON.stringify({"username": username}),
+        dataType: "json",
+        contentType: "application/json",
+        success: function(userData) {
+          document.getElementById("navbar").style.display = "";
+          document.getElementById("noteCalendarDivision").style.display = "";
+          document.getElementById("startupPage").style.display = "none";
+      
+          for (i = 0; i < userData.notes.length; i++) {
+            loadNote(userData.notes[i].title, userData.notes[i].text);
+          }
+        },
+        error: function(response) {
+          console.log(response);
+        },
+    });
+
+    // notes = $("#notes"); 
+    // notes = $("#board"); // get references to the 'notes' list
 
     $("#add_new").click(newNote);  
     

@@ -26,6 +26,8 @@
 <link href='note/note.css'  rel='stylesheet' type='text/css'>
 <script src='note/note.js'></script>
 
+<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+
 <script src='layout/scripts/bootstrap.js'></script>
 
 <script src="layout/scripts/jquery.placeholder.min.js"></script>
@@ -45,32 +47,59 @@
     var titleOfNewEvent = document.getElementById("eventTitle").value;
     var dateOfNewEvent = document.getElementById("datetimepickerCalendar").value;
     var newElement = {title : titleOfNewEvent, start : dateOfNewEvent};
-    // Add new event to the full calendar and render it.
-    $('#calendar_full').fullCalendar('renderEvent', newElement , true);
-    var sendToDB = [{"type":"add","format":"calendar","user": "", "text": titleOfNewEvent, "date": dateOfNewEvent}];
+    var sendToDB = [{"type":"event","username": "testuser2", "text": titleOfNewEvent, "dt": dateOfNewEvent}];
     $.ajax({
-      url: '/cgi_bin/inputselector.py',
+      url: 'http://0.0.0.0:5000/add',
       type: "post",
       data: {"events": sendToDB},
       dataType: "json",
       contentType: "application/json",
-      success: function() {
+      success: function(response) {
         // If the JSON object was sent successfully, remove the contents of the modal inputs
         // Additionally we can have a separate notification...
         document.getElementById("eventTitle").value = "";
         document.getElementById("datetimepickerCalendar").value = "";
-      }
+        var serverResponse = JSON.parse(response);
+        console.log(serverResponse.success);
+        // Add new event to the full calendar and render it.
+        $('#calendar_full').fullCalendar('renderEvent', newElement , true);
+      },
+      error: function(response) {
+        var serverResponse = JSON.parse(response);
+        console.log(serverResponse.error);
+      },
     });
   }
 
 
   function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
-    console.log('Email: ' + profile.getEmail());
-    document.getElementById("navbar").style.display = "";
-    document.getElementById("noteCalendarDivision").style.display = "";
-    document.getElementById("startupPage").style.display = "none";
-    createCalendar();
+    var email = profile.getEmail();
+    console.log('Email: ' + email);
+
+    $.ajax({
+      url: 'http://0.0.0.0:5000/login',
+      type: "post",
+      data: {"email": email},
+      dataType: "json",
+      contentType: "application/json",
+      success: function(response) {
+        document.getElementById("navbar").style.display = "";
+        document.getElementById("noteCalendarDivision").style.display = "";
+        document.getElementById("startupPage").style.display = "none";
+
+        var userData = JSON.parse(response);
+        var eventData = [];
+        for (i = 0; i < userData.events.length; i++) {
+          eventData.concat({title : '' + userData.events[i].text, start : '' + userData.events[i].dt});
+        }
+        createCalendar(eventData);
+      },
+      error: function(response) {
+        var serverResponse = JSON.parse(response);
+        console.log(serverResponse.error);
+      },
+    });
   }
 
   function signInFake(googleUser) {
@@ -78,6 +107,7 @@
     document.getElementById("navbar").style.display = "";
     document.getElementById("noteCalendarDivision").style.display = "";
     document.getElementById("startupPage").style.display = "none";
+    emptyEvents = [];
     createCalendar();
   }
 
@@ -88,7 +118,7 @@
     });
   }
 
-  function createCalendar() {
+  function createCalendar(eventData) {
     $('#calendar_full').fullCalendar({
       customButtons: {
         addNewEvent: {
@@ -104,7 +134,7 @@
         center: 'title',
         right: 'addNewEvent'
       },
-      events: [],
+      events: eventData,
       height: 650, // would like to change this to parent
       fixedWeekCount: false
     });   
@@ -115,23 +145,19 @@
 
 <body>
   <!-- Upon visiting TaDa page, user will be greeted with a start up page to login with Google -->
-  <div id = "startupPage" class = "container-fluid">
-    <div class = "row">
-        <h1 align="center">Welcome to TaDa!</h1>
-        <div class = "col-md-6">
-          <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
-          <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button>
-        </div>
-    </div>
+  <div id = "startupPage">
+    <h1 class="text-center" style="padding-top:15%">Welcome to TaDa! <br><br> <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button>
+    </h1>
+    <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
   </div>
   <!-- For navbar -->
   <nav id = "navbar" class="navbar navbar-toggleable-md navbar-inverse bg-inverse" style="display:none;">
-    <a class="navbar-brand navbar-center"style="font-size: 30px; color: white; font-weight: bold;">TaDa</a>
+    <a class="navbar-brand" style="position: relative; position: absolute; left: 50%; margin-left: -50px !important; display: block; font-size: 30px; color: white; font-weight: bold;">TaDa</a>
 
     <div class="collapse navbar-collapse">
-      <form class="form-inline my-2 my-lg-0">
-        <button class="btn btn-danger my-2 my-sm-0" onclick="signOut()">Sign Out</button>
-      </form>
+        <form class="form-inline my-2 my-lg-0">
+          <button class="btn btn-danger my-2 my-sm-0" onclick="signOut()">Sign Out</button>
+        </form>
     </div>
   </nav>
   <!-- Notes and Calendar division -->

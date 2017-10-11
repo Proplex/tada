@@ -39,7 +39,7 @@ docker run --rm -it --name=tada_flask_server --network=host -P tada_flask_image 
 Restart MySQL and run flask in the container:
 ```
 service mysql restart
-TADA_APP=/tada/flask/tada.py flask run --host=0.0.0.0
+FLASK_APP=/tada/flask/tada.py flask run --host=0.0.0.0
 ```
 
 ### Finally, to Use TaDa

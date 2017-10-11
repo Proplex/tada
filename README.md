@@ -40,8 +40,10 @@ Restart MySQL, source our SQL database file from the MySQL prompt, and run flask
 service mysql restart
 cd /tada/flask
 mysql # to open mysql prompt
-mysql> setup_db.sql # in mysql prompt
+
+mysql> setup_db.sql /* in mysql prompt */
 mysql> quit /* exit MySQL prompt */
+
 FLASK_APP=/tada/flask/tada.py flask run --host=0.0.0.0
 ```
 

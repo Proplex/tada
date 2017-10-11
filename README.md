@@ -30,7 +30,7 @@ The Dockerfile is in the docker directory.
 
 To run a container based on the built image:
 ```
-docker run --rm -it --name=tada_flask_server --network=host -P tada_flask_image /bin/bash
+docker run --rm -it --name=tada_flask_server -p 5000:5000 tada_flask_image /bin/bash
 ```
 
 ### Then

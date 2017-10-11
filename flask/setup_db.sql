@@ -8,14 +8,18 @@ CREATE TABLE users(
 CREATE TABLE note(
   id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(100),
+  title VARCHAR(50),
   text VARCHAR(100),
+  x INT,
+  y INT,
+  noteID VARCHAR(10),
   PRIMARY KEY (id)
 );
 
-CREATE TABLE calendar(
+CREATE TABLE event(
   id INT NOT NULL AUTO_INCREMENT,
   username VARCHAR(100),
   text VARCHAR(100),
-  date DATETIME,
+  dt DATETIME,
   PRIMARY KEY (id)
 );

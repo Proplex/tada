@@ -47,6 +47,7 @@ RUN apt -y update && apt -y upgrade && apt install -y -q --no-install-recommends
 ENV LC_ALL C.UTF-8
 ENV LANG=C.UTF-8
 
+RUN chown -R mysql:mysql /var/lib/mysql
 RUN git clone https://github.com/CosmicVarion/tada /tada
 RUN cd /tada && git checkout develop
 

@@ -32,10 +32,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt -y update && apt -y upgrade && apt install -y -q --no-install-recommends \
     vim \
-    sudo \    
     git \
-    curl \
-    gedit \
     python3-dev \
     python3-pip \
     python3-setuptools \
@@ -51,7 +48,5 @@ ENV LC_ALL C.UTF-8
 ENV LANG=C.UTF-8
 
 RUN git clone https://github.com/CosmicVarion/tada /tada
-RUN cd /tada && git checkout flask
-
-# CMD FLASK_APP=/tada/flask/tada.py flask run --host=0.0.0.0
+RUN cd /tada && git checkout master
 

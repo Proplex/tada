@@ -11,13 +11,12 @@ Web application that is a clone of Trello and Google Calendar. On the left side,
 
 The above features are not in the MVP, but will likely be accomplished for beta release.
 
-# To Use the MVP
+# To Use the MVP (tested only on Ubuntu)
 
 ### Clone the Repo
 ```
 git clone https://github.com/CosmicVarion/tada.git
 ```
-
 
 ### Build Docker Image
 
@@ -36,7 +35,7 @@ docker run --rm -it --name=tada_flask_server --network=host -P tada_flask_image 
 
 ### Then
 
-Restart MySQL and run flask in the container:
+Restart MySQL (may take a minute and may say it has failed, but has not...) and run flask in the container:
 ```
 service mysql restart
 FLASK_APP=/tada/flask/tada.py flask run --host=0.0.0.0

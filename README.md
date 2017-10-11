@@ -21,10 +21,11 @@ git clone https://github.com/CosmicVarion/tada.git
 
 ### Build Docker Image
 
-The Dockerfile is in the docker directory. To build:
+To build from the tada directory:
 ```
-docker build -t tada_flask_image /path/to/dir/with/Dockerfile
+docker build -t tada_flask_image docker/
 ```
+The Dockerfile is in the docker directory.
 
 ### Run Docker Container
 

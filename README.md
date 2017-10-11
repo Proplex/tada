@@ -37,7 +37,7 @@ docker run --rm -it --name=tada_flask_server -p 5000:5000 tada_flask_image /bin/
 
 Restart MySQL, source our SQL database file from the MySQL prompt, and run flask in the container:
 ```
-chmod -R mysql:mysql /var/lib/mysql
+chown -R mysql:mysql /var/lib/mysql
 service mysql restart
 cd /tada/flask
 mysql # to open mysql prompt

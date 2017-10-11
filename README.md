@@ -11,7 +11,7 @@ Web application that is a clone of Trello and Google Calendar. On the left side,
 
 The above features are not in the MVP, but will likely be accomplished for beta release.
 
-# To Use the MVP (tested only on Ubuntu)
+# To Use the MVP (tested on Mac and Ubuntu)
 
 ### Clone the Repo
 ```

@@ -74,3 +74,44 @@ def add_event():
 			connection.close()
 	
 	return success('add event succeeded')
+	
+	
+@app.route('/delete_note',methods=['POST'])
+def delete_note():
+	print(request.__dict__)
+	print(request.get_json())
+	connection = None	
+	try:	
+		connection = connect_to_db()
+		id = request['noteID']
+		result = db.notes.delete_many({"noteID": id})
+	except Exception as e:
+	print('Delete note failed')
+		return error(e)
+	finally:
+		if connection != None:		
+			connection.close()
+	
+	return success('Delete note succeeded')
+
+		
+			
+			
+@app.route('/delete_event',methods=['POST'])
+def delete_event():
+	print(request.__dict__)
+	print(request.get_json())
+	connection = None	
+	try:	
+		connection = connect_to_db()
+		id = request['eventID']
+		result = db.events.remove_many({"eventID": id})
+	except Exception as e:
+	print('Delete event failed')
+		return error(e)
+	finally:
+		if connection != None:		
+			connection.close()
+	
+	return success('Delete event succeeded')
+	

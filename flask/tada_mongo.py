@@ -115,3 +115,42 @@ def delete_event():
 	
 	return success('Delete event succeeded')
 	
+@app.route('/edit_note',methods=['POST'])
+def edit_note():
+	print(request.__dict__)
+	print(request.get_json())
+	connection = None	
+	try:	
+		connection = connect_to_db()
+		id = request['noteID']
+		result = db.notes.update_one({"noteID": id}, request.get_json())
+	except Exception as e:
+	print('Update note failed')
+		return error(e)
+	finally:
+		if connection != None:		
+			connection.close()
+	
+	return success('Update note succeeded')
+
+		
+			
+			
+@app.route('/edit_event',methods=['POST'])
+def edit_event():
+	print(request.__dict__)
+	print(request.get_json())
+	connection = None	
+	try:	
+		connection = connect_to_db()
+		id = request['eventID']
+		result = db.events.update_one({"eventID": id}, request.get_json())
+	except Exception as e:
+	print('Edit event failed')
+		return error(e)
+	finally:
+		if connection != None:		
+			connection.close()
+	
+	return success('Edit event succeeded')
+	

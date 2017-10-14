@@ -19,6 +19,9 @@ js = Bundle('fullcalendar/lib/moment.min.js',
 	    'layout/scripts/jquery.backtotop.js',
 	    'layout/scripts/jquery.mobilemenu.js',
 	    'layout/scripts/jquery.placeholder.min.js',
+        'vendor/jquery/jquery.min.js',
+        'vendor/popper/popper.min.js'
+        'vendor/bootstrap/js/bootstrap.min.js',
 	    output='gen/packed.js')
 assets.register('js',js)
 
@@ -28,7 +31,10 @@ css = Bundle('fullcalendar/fullcalendar.css',
 	     'layout/styles/jquery-ui.css',
 	     'layout/styles/bootstrap-datepicker.css',
 	     'layout/styles/bootstrap-datetimepicker.css',
+         'vendor/font-awesome/css/font-awesome.min.css',
 	     'note/note.css',
+         'vendor/bootstrap/css/bootstrap.min.css',
+         'landing/landing-page.css',
 	     output='gen/packed.css')
 assets.register('css',css)
 

@@ -49,8 +49,6 @@
 
 <script src="layout/scripts/jquery.placeholder.min.js"></script>
 
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
-
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script type="text/javascript">
@@ -68,20 +66,24 @@
           click: function() {
             //Show the modal when the custom button is pressed
             document.getElementById("eventTitle").value = null;
-		        document.getElementById("datetimepickerCalendar").value = null;
+            document.getElementById("datetimepickerCalendar").value = null;
+            $('#deleteModalButton').addClass('disabled');
+            $('#deleteModalButton').removeAttr('data-toggle');
             $('#addEventModal').modal('show');
             }
         }
       },
       header: {
-        left: 'prev,next',
+        left: 'prev,next addNewEvent',
         center: 'title',
-        right: 'addNewEvent'
+        right: 'month,agendaWeek',
       },
       events: eventData,
       eventClick: function(calEvent) {
         document.getElementById("eventTitle").value = calEvent.title;
-		    document.getElementById("datetimepickerCalendar").value = calEvent.start.format('YYYY-MM-DD h:mm a');
+        document.getElementById("datetimepickerCalendar").value = calEvent.start.format('YYYY-MM-DD h:mm a');
+        $('#deleteModalButton').removeClass('disabled');
+        $('#deleteModalButton').attr("data-toggle", "modal");
         $('#addEventModal').modal('show');
       },
       height: 650, // would like to change this to parent
@@ -124,6 +126,11 @@
         console.log(response);
       },
     });*/
+  }
+
+  // Function called when Delete button in the Add New Event modal is pressed (Only applicable when existing event is clicked)
+  function deleteEvent(eventID) {
+
   }
 
   function onSignIn(googleUser) {
@@ -221,6 +228,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Add Event to Calendar</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           <div class="form-inline">
@@ -240,7 +250,7 @@
           <!-- addEvent() is the function called when the Save button is pressed -->
           <!-- Modal will close after either button is pressed -->
           <button type="button" class="btn btn-success" data-dismiss="modal" onclick="addEvent()">Save</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary disabled" data-dismiss="modal" onclick="deleteEvent()" id="deleteModalButton">Delete</button>
         </div>
       </div>
     </div>

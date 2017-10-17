@@ -154,3 +154,12 @@ def edit_event():
 	
 	return success('Edit event succeeded')
 	
+	
+@app.route('/login',methods=['POST'])
+def login():
+	print(request.get_json())
+	username = request['username']
+	notes = db.notes.find({"username": username})
+	events = db.events.find({"username": username})
+	retval = "{"notes": notes, "events": events}
+	return success(retval)

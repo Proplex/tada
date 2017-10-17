@@ -6,8 +6,8 @@ db.notes.save({
     "username":"testuser",
     "title":"test note title",
     "noteList": [
-                {"text":"test text 1","dt":"2017-10-14 10:00"},
-                {"text":"test text 2"}            
+                {"text":"test text 1"},
+                {"text":"test text 2"}
             ],
     "x":0,
     "y":0,
@@ -15,15 +15,15 @@ db.notes.save({
     "color": "#ffffff"
 })
 
-db.events.save(
+db.events.save({
     "username":"testuser",
     "title":"test event title",
     "eventList": [
-                {"dt":"2017-10-14 12:00"},
-                {"dt":"2017-10-14 01:00"}            
+                {"start":"2017-10-14 12:00","end":"2017-10-14 01:00"},
+                {"start":"2017-10-15 12:00","end":"2017-10-15 01:00"}            
             ],
     "eventID":0,
     "color": "#ffffff"
-)
+})
 
 

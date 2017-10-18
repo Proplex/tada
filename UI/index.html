@@ -130,7 +130,7 @@
         document.getElementById("saveModalButton").onclick = function(){editEvent(calEvent)};
         $('#addEventModal').modal('show');
       },
-      height: 650, // would like to change this to parent
+      height: 600, // would like to change this to parent
       fixedWeekCount: false
     });   
   }
@@ -145,9 +145,9 @@
     var endDateOfNewEvent = document.getElementById("endTimeCalendar").value;
     var newElement = {id : 1, title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};
 
-    var toSend = {"username": username, "title": titleOfNewEvent, "eventList" : [{"start" : startDateOfNewEvent, "end" : endDateOfNewEvent}], "eventID" : 0, "color" : "#ffffff"};
     $('#calendar_full').fullCalendar('renderEvent', newElement , true);
     /*
+    var toSend = {"username": username, "title": titleOfNewEvent, "eventList" : [{"start" : startDateOfNewEvent, "end" : endDateOfNewEvent}], "color" : "#ffffff"};
     $.ajax({
       url: 'http://localhost:5000/add_event',
       type: "post",
@@ -156,7 +156,8 @@
       contentType: "application/json",
       success: function(response) {
 	
-	      if ('success' in response) {	
+	      if ('success' in response) {
+          var newElement = {id : response['eventID'], title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};	
 		      $('#calendar_full').fullCalendar('renderEvent', newElement , true);
 	      }
 	      else if ('error' in response) {
@@ -175,6 +176,7 @@
     event.end = document.getElementById("endTimeCalendar").value;
     $('#calendar_full').fullCalendar('updateEvent', event);
     /*
+    var toSend = {"username": username, "title": event.title, "eventList" : [{"start" : event.start, "end" : event.end}], "eventID" : event.id, "color" : "#ffffff"};
     $.ajax({
       url: 'http://localhost:5000/edit_event',
       type: "post",
@@ -200,6 +202,7 @@
   function deleteEvent(eventID) {
     $('#calendar_full').fullCalendar('removeEvents', eventID, true);
     /*
+    var toSend = {"username": username, "eventID" : eventID};
     $.ajax({
       url: 'http://localhost:5000/delete_event',
       type: "post",
@@ -239,7 +242,9 @@
 	
         var eventData = [];
         for (i = 0; i < userData.events.length; i++) {
-          eventData.push({'title' : userData.events[i].text, 'start' : userData.events[i].dt});	
+          for (j = 0; j < userData.events.eventList.length; j++) {
+            eventData.push({'id' : userData.events[i].eventID, 'title' : userData.events[i].title, 'start' : userData.events[i].eventList[j].start, 'end' : userData.events[i].eventList[j].start});	
+          }
         }
         createCalendar(eventData);
 

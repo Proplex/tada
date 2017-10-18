@@ -1,6 +1,8 @@
-use db
 
-db.users.save("testuser")
+// shell command to run
+// mongo localhost:27017/db setup_mongo.js
+
+db.users.save({"username":"testuser"});
 
 db.notes.save({    
     "username":"testuser",
@@ -13,7 +15,7 @@ db.notes.save({
     "y":0,
     "noteID":0,
     "color": "#ffffff"
-})
+});
 
 db.events.save({
     "username":"testuser",
@@ -24,6 +26,6 @@ db.events.save({
             ],
     "eventID":0,
     "color": "#ffffff"
-})
+});
 
 

@@ -1,20 +1,76 @@
-add1 = !curl \
-	-X POST \
-	-H "Content-Type: application/json" \
-	-d '{"type":"note", "username":"testuser", "text":"test text", "x":0, "y":0}' \
-	http://localhost:5000/add
-print(add1)
+import sys
+import json
 
-add2 = !curl \
-	-X POST \
-	-H "Content-Type: application/json" \
-	-d '{"type":"event", "username":"testuser", "text":"test text", "datetime":"2017-01-01 01:01:00"}' \
-	http://localhost:5000/add
-print(add2)
+data = {    
+            "username":"testuser2",
+            "title":"test note title",
+            "noteList": [
+                            {"text":"test text 1"},
+                            {"text":"test text 2"}
+                        ],
+            "x":0,
+            "y":0,
+            "noteID":0,
+            "color": "#ffffff"
+       }
 
-login = !curl \
-	-X POST \
-	-H "Content-Type: application/json" \
-	-d '{"username":"testuser"}' \
-	http://localhost:5000/login
-print(login)
+data = "'"+str(data).replace("'", '"')+"'"
+
+print(data)
+
+# add_note
+test = !curl \
+	    -X POST \
+	    -H "Content-Type: application/json" \
+	    -d $data \
+	    http://localhost:5000/add_note
+print(test)
+
+# add_event
+#test = !curl \
+#	    -X POST \
+#	    -H "Content-Type: application/json" \
+#	    -d '' \
+#	    http://localhost:5000/add_event
+#print(test)
+
+# delete_note
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '' \
+#	http://localhost:5000/delete_note
+#print(test)
+
+# delete_event
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '' \
+#	http://localhost:5000/delete_event
+#print(test)
+
+# edit_note
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '}' \
+#	http://localhost:5000/edit_note
+#print(test)
+
+# edit_event
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '{"username":"testuser"}' \
+#	http://localhost:5000/edit_event
+#print(test)
+
+# login
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '{"username":"testuser"}' \
+#	http://localhost:5000/login
+#print(test)
+

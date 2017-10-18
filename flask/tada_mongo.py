@@ -31,7 +31,6 @@ css = Bundle('fullcalendar/fullcalendar.css',
              output='gen/packed.css')
 assets.register('css',css)
 
-app.config['db'] = 'db'
 mongo = PyMongo(app)
 
 
@@ -48,9 +47,10 @@ def error(message):
 def add_note():
     json_str  = request.get_json()
     print(json_str)
+    json_dict = dict(json_str)    
 
     try:	
-        mongo.db.notes.insert_one(json_str)
+        print(mongo.db.notes.insert_one(json_dict))
     except Exception as e:
         print(e)
         return error(e)

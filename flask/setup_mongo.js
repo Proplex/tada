@@ -1,6 +1,6 @@
 
 // shell command to run
-// mongo localhost:27017/db setup_mongo.js
+// mongo localhost:27017/tada_mongo setup_mongo.js
 
 db.users.save({"username":"testuser"});
 

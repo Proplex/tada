@@ -2,7 +2,7 @@ import sys
 import json
 
 data = {    
-            "username":"testuser",
+            "username":"testuser2",
             "title":"test note title",
             "noteList": [
                             {"text":"test text 1"},
@@ -14,7 +14,9 @@ data = {
             "color": "#ffffff"
        }
 
-data = "'"+str(data)+"'"
+data = "'"+str(data).replace("'", '"')+"'"
+
+print(data)
 
 # add_note
 test = !curl \
@@ -24,4 +26,51 @@ test = !curl \
 	    http://localhost:5000/add_note
 print(test)
 
+# add_event
+#test = !curl \
+#	    -X POST \
+#	    -H "Content-Type: application/json" \
+#	    -d '' \
+#	    http://localhost:5000/add_event
+#print(test)
+
+# delete_note
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '' \
+#	http://localhost:5000/delete_note
+#print(test)
+
+# delete_event
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '' \
+#	http://localhost:5000/delete_event
+#print(test)
+
+# edit_note
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '}' \
+#	http://localhost:5000/edit_note
+#print(test)
+
+# edit_event
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '{"username":"testuser"}' \
+#	http://localhost:5000/edit_event
+#print(test)
+
+# login
+#test = !curl \
+#	-X POST \
+#	-H "Content-Type: application/json" \
+#	-d '{"username":"testuser"}' \
+#	http://localhost:5000/login
+#print(test)
 

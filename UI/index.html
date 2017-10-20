@@ -236,7 +236,8 @@
         document.getElementById("navbar").style.display = "";
         document.getElementById("noteCalendarDivision").style.display = "";
         document.getElementById("startupPage").style.display = "none";
-	
+  
+        // return calendar events
         var eventData = [];
         for (i = 0; i < userData.events.length; i++) {
           for (j = 0; j < userData.events.eventList.length; j++) {
@@ -245,8 +246,9 @@
         }
         createCalendar(eventData);
 
+        // return notes
 	      for (i = 0; i < userData.notes.length; i++) {
-          loadNote(userData.notes[i].title, userData.notes[i].text, userData.notes[i].noteID);
+          loadNote(userData.notes[i].title, userData.notes[i].text, userData.notes[i].noteID); // NEED TO MODIFY
         }
       },
       error: function(response) {

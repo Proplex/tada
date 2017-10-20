@@ -47,9 +47,6 @@
 
 <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
 
-<script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>
-<script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>
-
 <script src='layout/scripts/bootstrap.js'></script>
 
 <script src="layout/scripts/jquery.placeholder.min.js"></script>
@@ -63,39 +60,30 @@
     $("#save_note").click(saveNote);
     $('#startTimeCalendar').datetimepicker();
     $('#endTimeCalendar').datetimepicker();
-    $('#eventForm').formValidation({
-      framework: 'bootstrap',
-        excluded: ':disabled',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-          eventTitle: {
-                validators: {
-                    notEmpty: {
-                        message: 'Event Title is required'
-                    }
-                }
-            },
-            startTimeCalendar: {
-                validators: {
-                    notEmpty: {
-                        message: 'Start Time is required'
-                    }
-                }
-            },
-            endTimeCalendar: {
-                validators: {
-                    notEmpty: {
-                        message: 'End Time is required'
-                    }
-                }
-            }
-        }
-    });
   });
+
+  function validateForm() {    
+    var eventTitle = document.getElementById("eventTitle").value;
+    var startTime = document.getElementById("startTimeCalendar").value;
+    var endTime = document.getElementById("endTimeCalendar").value;
+    var flag = true;
+    if (eventTitle.length == 0) {
+      document.getElementById("titlemsg").style.display="";
+      flag = false;
+    }
+    else {document.getElementById("titlemsg").style.display="none";}
+    if (!moment(startTime, "YYYY-MM-DD HH:mm", true).isValid()) {
+      document.getElementById("startmsg").style.display="";
+      flag = false;
+    }
+    else {document.getElementById("startmsg").style.display="none";}
+    if (!moment(endTime, "YYYY-MM-DD HH:mm", true).isValid() || endTime < startTime) {
+      document.getElementById("endmsg").style.display="";
+      flag = false;
+    }
+    else {document.getElementById("endmsg").style.display="none";}
+    return flag;
+  }
 
   function createCalendar(eventData) {
     $('#calendar_full').fullCalendar({
@@ -144,8 +132,11 @@
     var startDateOfNewEvent = document.getElementById("startTimeCalendar").value;
     var endDateOfNewEvent = document.getElementById("endTimeCalendar").value;
     var newElement = {id : 1, title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};
+    if (validateForm()) {
+      $('#addEventModal').modal('toggle');
+      $('#calendar_full').fullCalendar('renderEvent', newElement , true);
+    }
 
-    $('#calendar_full').fullCalendar('renderEvent', newElement , true);
     /*
     var toSend = {"username": username, "title": titleOfNewEvent, "eventList" : [{"start" : startDateOfNewEvent, "end" : endDateOfNewEvent}], "color" : "#ffffff"};
     $.ajax({
@@ -174,7 +165,10 @@
     event.title = document.getElementById("eventTitle").value;
     event.start = document.getElementById("startTimeCalendar").value;
     event.end = document.getElementById("endTimeCalendar").value;
-    $('#calendar_full').fullCalendar('updateEvent', event);
+    if (validateForm()) {
+      $('#addEventModal').modal('toggle');
+      $('#calendar_full').fullCalendar('updateEvent', event);
+    }
     /*
     var toSend = {"username": username, "title": event.title, "eventList" : [{"start" : event.start, "end" : event.end}], "eventID" : event.id, "color" : "#ffffff"};
     $.ajax({
@@ -326,33 +320,37 @@
           </button>
         </div>
         <div class="modal-body">
-          <form id="eventForm" class="form-horizontal">
-            <div class="form-group">
+          <form id="eventForm">
+            <div class="form-inline">
               <label for="eventTitle" class="col-sm-4 control-label">Title: </label>
               <div class="col-sm-8">
-                  <input type="text" id="eventTitle" name="eventTitle" class="form-control">
+                <input type="text" id="eventTitle" name="eventTitle" class="form-control">
+                <div id="titlemsg" style="color:Red;display:none">Please input a Title</div>
               </div>
             </div>
-            <div class="form-group" style="padding-top: 10px">
+            <div class="form-inline" style="padding-top: 10px">
               <label for="startTimeCalendar" class="col-sm-4 control-label">Start Time: </label>
               <div class="col-sm-8">
-                  <input type="text" id="startTimeCalendar" name="startTimeCalendar" class="form-control" placeholder="YYYY-MM-DD HH:MM">
+                <input type="text" id="startTimeCalendar" name="startTimeCalendar" class="form-control" placeholder="YYYY-MM-DD HH:MM">
+                <div id="startmsg" style="color:Red;display:none">Not a valid Start Time</div>
               </div>
             </div>
-            <div class="form-group" style="padding-top: 10px">
+            <div class="form-inline" style="padding-top: 10px; padding-bottom: 10px">
               <label for="endTimeCalendar" class="col-sm-4 control-label">End Time: </label>
               <div class="col-sm-8">
-                  <input type="text" id="endTimeCalendar" name="endTimeCalendar" class="form-control" placeholder="YYYY-MM-DD HH:MM">
+                <input type="text" id="endTimeCalendar" name="endTimeCalendar" class="form-control" placeholder="YYYY-MM-DD HH:MM">
+                <div id="endmsg" style="color:Red;display:none">Not a valid End Time</div>
               </div>
             </div>
           </form>
+          <div class="modal-footer" >
+            <!-- addEvent() is the function called when the Save button is pressed -->
+            <!-- Modal will close after either button is pressed -->
+            <button type="submit" class="btn btn-success" onclick="addEvent()" id="saveModalButton">Save</button>
+            <button type="button" class="btn btn-secondary disabled" data-dismiss="modal" onclick="deleteEvent()" id="deleteModalButton">Delete</button>
+          </div>
         </div>
-        <div class="modal-footer">
-          <!-- addEvent() is the function called when the Save button is pressed -->
-          <!-- Modal will close after either button is pressed -->
-          <button type="submit" class="btn btn-success" data-dismiss="modal" onclick="addEvent()" id="saveModalButton">Save</button>
-          <button type="button" class="btn btn-secondary disabled" data-dismiss="modal" onclick="deleteEvent()" id="deleteModalButton">Delete</button>
-        </div>
+        
       </div>
     </div>
   </div>

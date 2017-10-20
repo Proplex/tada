@@ -77,7 +77,7 @@
       flag = false;
     }
     else {document.getElementById("startmsg").style.display="none";}
-    if (!moment(endTime, "YYYY-MM-DD HH:mm", true).isValid() || endTime < startTime) {
+    if (!moment(endTime, "YYYY-MM-DD HH:mm", true).isValid() || endTime <= startTime) {
       document.getElementById("endmsg").style.display="";
       flag = false;
     }
@@ -97,6 +97,9 @@
             document.getElementById("endTimeCalendar").value = null;
             $('#deleteModalButton').addClass('disabled');
             $('#deleteModalButton').removeAttr('data-toggle');
+            document.getElementById("titlemsg").style.display="none";
+            document.getElementById("startmsg").style.display="none";
+            document.getElementById("endmsg").style.display="none";
             document.getElementById("saveModalButton").onclick = function(){addEvent()};
             $('#addEventModal').modal('show');
           }
@@ -110,8 +113,8 @@
       events: eventData,
       eventClick: function(calEvent) {
         document.getElementById("eventTitle").value = calEvent.title;
-        document.getElementById("startTimeCalendar").value = calEvent.start.format('YYYY-MM-DD HH:MM');
-        document.getElementById("endTimeCalendar").value = calEvent.end.format('YYYY-MM-DD HH:MM');
+        document.getElementById("startTimeCalendar").value = calEvent.start.format('YYYY-MM-DD HH:mm');
+        document.getElementById("endTimeCalendar").value = calEvent.end.format('YYYY-MM-DD HH:mm');
         $('#deleteModalButton').removeClass('disabled');
         $('#deleteModalButton').attr("data-toggle", "modal");
         document.getElementById("deleteModalButton").onclick = function(){deleteEvent(calEvent.id)};
@@ -148,7 +151,7 @@
       success: function(response) {
 	
 	      if ('success' in response) {
-          var newElement = {id : response['eventID'], title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};	
+          var newElement = {id : response['_id'], title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};	
 		      $('#calendar_full').fullCalendar('renderEvent', newElement , true);
 	      }
 	      else if ('error' in response) {
@@ -170,7 +173,7 @@
       $('#calendar_full').fullCalendar('updateEvent', event);
     }
     /*
-    var toSend = {"username": username, "title": event.title, "eventList" : [{"start" : event.start, "end" : event.end}], "eventID" : event.id, "color" : "#ffffff"};
+    var toSend = {"username": username, "title": event.title, "eventList" : [{"start" : event.start, "end" : event.end}], "_id" : event.id, "color" : "#ffffff"};
     $.ajax({
       url: 'http://localhost:5000/edit_event',
       type: "post",
@@ -196,7 +199,7 @@
   function deleteEvent(eventID) {
     $('#calendar_full').fullCalendar('removeEvents', eventID, true);
     /*
-    var toSend = {"username": username, "eventID" : eventID};
+    var toSend = {"username": username, "_id" : eventID};
     $.ajax({
       url: 'http://localhost:5000/delete_event',
       type: "post",
@@ -237,7 +240,7 @@
         var eventData = [];
         for (i = 0; i < userData.events.length; i++) {
           for (j = 0; j < userData.events.eventList.length; j++) {
-            eventData.push({'id' : userData.events[i].eventID, 'title' : userData.events[i].title, 'start' : userData.events[i].eventList[j].start, 'end' : userData.events[i].eventList[j].start});	
+            eventData.push({'id' : userData.events[i]._id, 'title' : userData.events[i].title, 'start' : userData.events[i].eventList[j].start, 'end' : userData.events[i].eventList[j].start});	
           }
         }
         createCalendar(eventData);

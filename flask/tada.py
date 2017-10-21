@@ -36,8 +36,8 @@ mongo = PyMongo(app)
 
 
 # returns a JSON dictionary where key "success" hashes to the supplied sucess message string
-def success(message):
-    return jsonify({'success': message})
+def success(message, id):
+    return jsonify({'success': message}, {'id'}: id})
 
 # returns a JSON dictionary where key "error" hashes to the supplied error message string
 def error(message):
@@ -55,12 +55,13 @@ def add_note():
     json_dict = dict(json_str)    
 
     try:	
-        print(mongo.db.notes.insert_one(json_dict)) #try to put json in db
+        id = mongo.db.notes.insert_one(json_dict) #try to put json in db
     except Exception as e:
         print(e)
         return error(e)
+		
 
-    return success('add note succeeded')
+    return success('add note successful', id)
 
 
 
@@ -70,12 +71,12 @@ def add_event():
     print(json_str)
 
     try:	
-        mongo.db.events.insert_one(json_str) #try to put json in db
+        id = mongo.db.events.insert_one(json_str) #try to put json in db
     except Exception as e:
         print(e)
         return error(e)
 
-    return success('add event succeeded')
+    return success('add event succeeded', id)
 
 
 @app.route('/delete_note',methods=['POST'])
@@ -116,8 +117,8 @@ def edit_note():
     print(json_str)	
     json_dict = dict(json_str)
 
-    try:	
-        noteID = request['noteID'] #grab unique id
+    try:
+        _id = json_dict['_id'] #grab unique id
         mongo.db.notes.update_one({"noteID": noteID}, json_str) #update entry
     except Exception as e:
         print(e)

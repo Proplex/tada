@@ -49,13 +49,13 @@ def root():
 
 
 @app.route('/add_note',methods=['POST'])
-def add_note():
-    json_str  = request.get_json()
+def add_note(): 
+    json_str  = request.get_json() # gets json sent from frontend
     print(json_str)
     json_dict = dict(json_str)    
 
     try:	
-        print(mongo.db.notes.insert_one(json_dict))
+        print(mongo.db.notes.insert_one(json_dict)) #try to put json in db
     except Exception as e:
         print(e)
         return error(e)
@@ -66,11 +66,11 @@ def add_note():
 
 @app.route('/add_event',methods=['POST'])
 def add_event():
-    json_str  = request.get_json()
+    json_str  = request.get_json() # gets json sent from frontend
     print(json_str)
 
     try:	
-        mongo.db.events.insert_one(json_str)
+        mongo.db.events.insert_one(json_str) #try to put json in db
     except Exception as e:
         print(e)
         return error(e)
@@ -81,12 +81,12 @@ def add_event():
 @app.route('/delete_note',methods=['POST'])
 def delete_note():
     json_str  = request.get_json()
-    print(json_str)	
+    print(json_str)	# get json of note function was called on
     json_dict = dict(json_str)    
 
     try:	
-        noteID = json_dict['noteID']
-        mongo.db.notes.delete_many({"noteID": noteID})
+        noteID = json_dict['noteID'] #get its note ID (unique)
+        mongo.db.notes.delete_many({"noteID": noteID}) #delete note by its unique ID
     except Exception as e:
         print(e)
         return error(e)
@@ -101,8 +101,8 @@ def delete_event():
     json_dict = dict(json_str)    
 
     try:	
-        eventID = json_dict['eventID']
-        mongo.db.notes.delete_many({"eventID": eventID})
+        eventID = json_dict['eventID'] #grab unique id
+        mongo.db.notes.delete_many({"eventID": eventID}) #delete by it
     except Exception as e:
         print(e)
         return error(e)
@@ -117,8 +117,8 @@ def edit_note():
     json_dict = dict(json_str)
 
     try:	
-        noteID = request['noteID']
-        mongo.db.notes.update_one({"noteID": noteID}, json_str)
+        noteID = request['noteID'] #grab unique id
+        mongo.db.notes.update_one({"noteID": noteID}, json_str) #update entry
     except Exception as e:
         print(e)
         return error(e)
@@ -135,8 +135,8 @@ def edit_event():
     json_dict = dict(json_str)
 
     try:	
-        eventID = request['eventID']
-        mongo.db.notes.update_one({"eventID": eventID}, json_str)
+        eventID = request['eventID'] #grab unique
+        mongo.db.notes.update_one({"eventID": eventID}, json_str) #update by it
     except Exception as e:
         print(e)
         return error(e)
@@ -150,12 +150,12 @@ def login():
     print(json_str)	
     json_dict = dict(json_str)
 
-    username = json_dict['username']
+    username = json_dict['username'] #get username from login
 
-    notes  = mongo.db.notes .find({"username": username})
+    notes  = mongo.db.notes .find({"username": username}) #grab user's notes and events
     events = mongo.db.events.find({"username": username})
 
-    return jsonify({"notes": notes, "events": events})
+    return jsonify({"notes": notes, "events": events}) #Send em all over in one big json
 
 
 #if __name__ == '__main__':

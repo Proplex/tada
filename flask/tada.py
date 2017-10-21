@@ -4,8 +4,9 @@ from flask_pymongo import PyMongo
 from datetime import datetime
 
 app = Flask(__name__,
-            template_folder='/tada/UI',
-            static_folder='/tada/UI')
+            template_folder='/var/www/html/tada/UI',
+            static_folder='/var/www/html/tada/UI')
+application = app
 assets = Environment(app)
 
 js = Bundle('fullcalendar/lib/moment.min.js',
@@ -41,6 +42,10 @@ def success(message):
 # returns a JSON dictionary where key "error" hashes to the supplied error message string
 def error(message):
     return jsonify({'error':message})
+
+@app.route('/')
+def root():
+	return render_template('index.html')
 
 
 @app.route('/add_note',methods=['POST'])
@@ -152,3 +157,39 @@ def login():
 
     return jsonify({"notes": notes, "events": events})
 
+
+#if __name__ == '__main__':
+#    app = Flask(__name__,
+#                template_folder='/tada/UI',
+#                static_folder='/tada/UI')
+#    assets = Environment(app)
+#    
+#    js = Bundle('fullcalendar/lib/moment.min.js',
+#                'fullcalendar/lib/jquery.min.js',
+#                'fullcalendar/fullcalendar.js',
+#                'note/note.js',
+#                'layout/scripts/bootstrap.js',
+#                'layout/scripts/bootstrap-datepicker.js',
+#                'layout/scripts/bootstrap-datetimepicker.js',
+#                'layout/scripts/jquery.backtotop.js',
+#                'layout/scripts/jquery.mobilemenu.js',
+#                'layout/scripts/jquery.placeholder.min.js',
+#                output='gen/packed.js')
+#    assets.register('js',js)
+#    
+#    css = Bundle('fullcalendar/fullcalendar.css',
+#                 'layout/styles/layout.css',
+#                 'layout/styles/bootstrap.css',
+#                 'layout/styles/jquery-ui.css',
+#                 'layout/styles/bootstrap-datepicker.css',
+#                 'layout/styles/bootstrap-datetimepicker.css',
+#                 'note/note.css',
+#                 output='gen/packed.css')
+#    assets.register('css',css)
+#    
+#    mongo = PyMongo(app)
+#    
+#    app.run(debug=True)
+
+if __name__ == '__main__':
+    app.run()

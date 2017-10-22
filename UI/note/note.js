@@ -242,10 +242,11 @@ function saveNote() {
         }
 
         if(checksum == 0){
-            var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "noteID": eID}
+            var toSend = {"username": username, "title": eTitle, "noteList" : [{"text" : eText}, {"text" : " "}], "x": 0, "y": 0, "noteID": eID, "color" : "#ffffff"};            
             
+            // var toSend = {"username":username,"title": eTitle, "noteList": eText, "x": 0, "y": 0, "noteID": eID}            
             $.ajax({
-                url: 'http://localhost:5000/add',
+                url: 'https://ubcse442tada.com/add_note',
                 type: "post",
                 data: JSON.stringify(toSend),
                 dataType: "json",

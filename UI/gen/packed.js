@@ -17908,10 +17908,83 @@ return FC; // export for Node/CommonJS
         });
     };
 })(jQuery);
+// plugins
+$.fn.extend({
+	_focus: $.fn.focus,
+	focus: function( delay, fn ) {
+		return typeof delay === "number" ?
+			this.each(function() {
+				var elem = this;
+				setTimeout(function() {
+					$( elem ).focus();
+					if ( fn ) {
+						fn.call( elem );
+					}
+				}, delay );
+			}) :
+			this._focus.apply( this, arguments );
+	},
 
+	scrollParent: function() {
+		var scrollParent;
+		if (($.browser.msie && (/(static|relative)/).test(this.css('position'))) || (/absolute/).test(this.css('position'))) {
+			scrollParent = this.parents().filter(function() {
+				return (/(relative|absolute|fixed)/).test($.curCSS(this,'position',1)) && (/(auto|scroll)/).test($.curCSS(this,'overflow',1)+$.curCSS(this,'overflow-y',1)+$.curCSS(this,'overflow-x',1));
+			}).eq(0);
+		} else {
+			scrollParent = this.parents().filter(function() {
+				return (/(auto|scroll)/).test($.curCSS(this,'overflow',1)+$.curCSS(this,'overflow-y',1)+$.curCSS(this,'overflow-x',1));
+			}).eq(0);
+		}
+
+		return (/fixed/).test(this.css('position')) || !scrollParent.length ? $(document) : scrollParent;
+	},
+
+	zIndex: function( zIndex ) {
+		if ( zIndex !== undefined ) {
+			return this.css( "zIndex", zIndex );
+		}
+
+		if ( this.length ) {
+			var elem = $( this[ 0 ] ), position, value;
+			while ( elem.length && elem[ 0 ] !== document ) {
+				// Ignore z-index if position is set to a value where z-index is ignored by the browser
+				// This makes behavior of this function consistent across browsers
+				// WebKit always returns auto if the element is positioned
+				position = elem.css( "position" );
+				if ( position === "absolute" || position === "relative" || position === "fixed" ) {
+					// IE returns 0 when zIndex is not specified
+					// other browsers return a string
+					// we ignore the case of nested elements with an explicit value of 0
+					// <div style="z-index: -10;"><div style="z-index: 0;"></div></div>
+					value = parseInt( elem.css( "zIndex" ) );
+					if ( !isNaN( value ) && value != 0 ) {
+						return value;
+					}
+				}
+				elem = elem.parent();
+			}
+		}
+
+		return 0;
+	},
+	
+	disableSelection: function() {
+		return this.bind(
+			"mousedown.ui-disableSelection selectstart.ui-disableSelection",
+			function( event ) {
+				event.preventDefault();
+			});
+	},
+
+	enableSelection: function() {
+		return this.unbind( ".ui-disableSelection" );
+	}
+});
 /*----------------------------------Variables----------------------------------*/
 var noteZindex = 1;
 var IDarray = []; // keep track of which note is present and which is deleted
+var checkID = []; 
 /*----------------------------------Delete Note----------------------------------*/
 function deleteNote(){
     $(this).parents('.note').remove(); // remove the note on click of corresponding x button
@@ -17936,9 +18009,10 @@ function loadNote(title, content, ID) {
                         +	'</div> '
                         +'</div>';
 
-    IDarray.push('noteID'+ID.toString()); // push the added note's ID into the ID array
+    IDarray.push('noteID' + ID.toString()); // push the added note's ID into the ID array
     console.log('ID array: ' + IDarray); // print out current ID array
-    
+    checkID.push(ID.toString());
+
     $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function(){
             $(this).zIndex(++noteZindex);
@@ -17966,7 +18040,7 @@ function newNote() {
                         +	'</div> '
                         +'</div>';
 
-        IDarray.push('noteID'+ID.toString()); // push the added note's ID into the ID array
+        IDarray.push('noteID' + ID.toString()); // push the added note's ID into the ID array
         console.log('ID array: ' + IDarray); // print out current ID array
                         
         $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
@@ -17982,9 +18056,8 @@ function newNote() {
 };
 /*----------------------------------Save Note----------------------------------*/
 function saveNote() {
-
     console.log('Saving notes...');
-    
+
     // get all textarea ID for title named as titleID + number
     var IDtitles = $('textarea[id^="titleID"]').filter(
         function(){
@@ -17998,6 +18071,8 @@ function saveNote() {
         });
         
     for(var i = 0; i< IDtitles.length; i++){
+        var checksum = 0;
+
         var tempTitle = IDtitles[i].id; // id of title of each note
         var tempText = IDtexts[i].id; // id of text of each note
 
@@ -18010,22 +18085,30 @@ function saveNote() {
                 
         console.log('Saved ID: ' + eID);           
         console.log('Saved title: ' + eTitle);
-        console.log('Saved text: ' + eText);   
-	
-	    var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "noteID": eID}
+        console.log('Saved text: ' + eText);
 
-        $.ajax({
-            url: 'http://localhost:5000/add',
-            type: "post",
-            data: JSON.stringify(toSend),
-            dataType: "json",
-            contentType: "application/json",
-            success: function() {
-            // If the JSON object was sent successfully, alert that notes are saved...
-            console.log('Successfully saved the notes');
-            }   
-        });
+        
+        for(var j = 0; j < checkID.length; j++){
+            if(checkID[j] == eID){
+                checksum = 1; // don't send the data to dabase since it already exists
+            }
+        }
 
+        if(checksum == 0){
+            var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "noteID": eID}
+            
+            $.ajax({
+                url: 'http://localhost:5000/add',
+                type: "post",
+                data: JSON.stringify(toSend),
+                dataType: "json",
+                contentType: "application/json",
+                success: function() {
+                // If the JSON object was sent successfully, alert that notes are saved...
+                console.log('Successfully saved the notes');
+                }   
+            });
+        }
     } 
 };
 

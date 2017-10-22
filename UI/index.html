@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<!--
+
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id" content="275995304578-5k2tiodmufnlb9tkqjitaf5tq0its755.apps.googleusercontent.com">
 
@@ -18,40 +18,10 @@
 {% assets "css" %}
     <link href="{{ ASSET_URL }}" rel='stylesheet' type='text/css'></link>
 {% endassets %}
--->
-<!-- externally linked --><!--
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://apis.google.com/js/platform.js" async defer></script>
--->
-<!-- GOOGLE OAUTH -->
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-<meta name="google-signin-client_id" content="275995304578-5k2tiodmufnlb9tkqjitaf5tq0its755.apps.googleusercontent.com">
 
-
-<!-- CSS -->
-<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
-<link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
-<link rel='stylesheet' href='layout/styles/bootstrap.css' />
-<link rel="stylesheet" href="layout/styles/jquery-ui.css" />
-<link rel="stylesheet" href="layout/styles/bootstrap-datetimepicker.css" />
-
-<!-- JAVASCRIPT -->
-<script src='fullcalendar/lib/jquery.min.js'></script>
-<script src='fullcalendar/lib/moment.min.js'></script>
-<script src='fullcalendar/fullcalendar.js'></script>
-<script src='layout/scripts/bootstrap-datetimepicker.js'></script>
-
-<link href='note/note.css'  rel='stylesheet' type='text/css'>
-<script src='note/note.js'></script>
-
-<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
-
-<script src='layout/scripts/bootstrap.js'></script>
-
-<script src="layout/scripts/jquery.placeholder.min.js"></script>
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 
 <script type="text/javascript">
   $(document).ready(function() {
@@ -134,34 +104,33 @@
     var titleOfNewEvent = document.getElementById("eventTitle").value;
     var startDateOfNewEvent = document.getElementById("startTimeCalendar").value;
     var endDateOfNewEvent = document.getElementById("endTimeCalendar").value;
-    var newElement = {id : 1, title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};
+    
     if (validateForm()) {
       $('#addEventModal').modal('toggle');
-      $('#calendar_full').fullCalendar('renderEvent', newElement , true);
+        var toSend = {"username": username, "title": titleOfNewEvent, "eventList" : [{"start" : startDateOfNewEvent, "end" : endDateOfNewEvent}], "color" : "#ffffff"};
+        $.ajax({
+          url: 'https://ubcse442tada.com/add_event',
+          type: "post",
+          data: JSON.stringify(toSend),
+          dataType: "json",
+          contentType: "application/json",
+          success: function(response) {
+	
+	          if ('success' in response) {
+              console.log(response['_id'])
+              var newElement = {id : response['_id'], title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};	
+		          $('#calendar_full').fullCalendar('renderEvent', newElement , true);
+	          }
+	          else if ('error' in response) {
+		          console.log(response['error'])
+	          }
+          },
+          error: function(response) {
+            console.log(response);
+          },
+        });
     }
 
-    /*
-    var toSend = {"username": username, "title": titleOfNewEvent, "eventList" : [{"start" : startDateOfNewEvent, "end" : endDateOfNewEvent}], "color" : "#ffffff"};
-    $.ajax({
-      url: 'http://localhost:5000/add_event',
-      type: "post",
-      data: JSON.stringify(toSend),
-      dataType: "json",
-      contentType: "application/json",
-      success: function(response) {
-	
-	      if ('success' in response) {
-          var newElement = {id : response['_id'], title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};	
-		      $('#calendar_full').fullCalendar('renderEvent', newElement , true);
-	      }
-	      else if ('error' in response) {
-		      console.log(response['error'])
-	      }
-      },
-      error: function(response) {
-        console.log(response);
-      },
-    });*/
   }
 
   function editEvent(event) {
@@ -172,10 +141,10 @@
       $('#addEventModal').modal('toggle');
       $('#calendar_full').fullCalendar('updateEvent', event);
     }
-    /*
-    var toSend = {"username": username, "title": event.title, "eventList" : [{"start" : event.start, "end" : event.end}], "_id" : event.id, "color" : "#ffffff"};
+    
+    var toSend = {"username": username, "title": event.title, "eventList" : [{"start" : event.start, "end" : event.end}], "color" : "#ffffff"};
     $.ajax({
-      url: 'http://localhost:5000/edit_event',
+      url: 'https://ubcse442tada.com/edit_event',
       type: "post",
       data: JSON.stringify(toSend),
       dataType: "json",
@@ -192,16 +161,15 @@
       error: function(response) {
         console.log(response);
       },
-    });*/
+    });
   }
 
   // Function called when Delete button in the Add New Event modal is pressed (Only applicable when existing event is clicked)
   function deleteEvent(eventID) {
-    $('#calendar_full').fullCalendar('removeEvents', eventID, true);
-    /*
-    var toSend = {"username": username, "_id" : eventID};
+    
+    var toSend = {"_id" : eventID};
     $.ajax({
-      url: 'http://localhost:5000/delete_event',
+      url: 'https://ubcse442tada.com/delete_event',
       type: "post",
       data: JSON.stringify(toSend),
       dataType: "json",
@@ -218,7 +186,7 @@
       error: function(response) {
         console.log(response);
       },
-    });*/
+    });
   }
 
   function onSignIn(googleUser) {
@@ -227,7 +195,7 @@
     console.log('Email: ' + username);
 
     $.ajax({
-      url: 'http://localhost:5000/login',
+      url: 'https://ubcse442tada.com/login',
       type: "post",
       data: JSON.stringify({"username": username}),
       dataType: "json",
@@ -236,10 +204,10 @@
         document.getElementById("navbar").style.display = "";
         document.getElementById("noteCalendarDivision").style.display = "";
         document.getElementById("startupPage").style.display = "none";
-	
+	    console.log(userData);
         var eventData = [];
-        for (i = 0; i < userData.events.length; i++) {
-          for (j = 0; j < userData.events.eventList.length; j++) {
+        for (i = 0; i < userData['events'].length; i++) {
+          for (j = 0; j < userData.events[i].eventList.length; j++) {
             eventData.push({'id' : userData.events[i]._id, 'title' : userData.events[i].title, 'start' : userData.events[i].eventList[j].start, 'end' : userData.events[i].eventList[j].start});	
           }
         }
@@ -278,10 +246,10 @@
   <!-- Upon visiting TaDa page, user will be greeted with a start up page to login with Google -->
   <div id = "startupPage" class="text-center">
     <h1 style="padding-top:15%">Welcome to TaDa!
-    <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button></h1>
+    <!-- <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button></h1> -->
     <!-- for reference -->
     <!-- <button class="btn btn-secondary my-2 my-sm-0" onclick="signInFake()">Sign In</button> -->
-    <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
     <!-- <div class="g-signin2" data-width="300" data-height="200" data-longtitle="true"> -->
 
   </div>

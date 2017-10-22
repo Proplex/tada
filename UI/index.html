@@ -142,7 +142,7 @@
       $('#calendar_full').fullCalendar('updateEvent', event);
     }
     
-    var toSend = {"username": username, "title": event.title, "eventList" : [{"start" : event.start, "end" : event.end}], "color" : "#ffffff"};
+    var toSend = {"username": username, "title": event.title, "_id" : event.id, "eventList" : [{"start" : event.start, "end" : event.end}], "color" : "#ffffff"};
     $.ajax({
       url: 'https://ubcse442tada.com/edit_event',
       type: "post",

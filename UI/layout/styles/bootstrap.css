@@ -5405,6 +5405,7 @@ button.close {
 
 .modal-open {
   overflow: hidden;
+  padding-right: 0 !important
 }
 
 .modal {
@@ -5439,6 +5440,7 @@ button.close {
 .modal-open .modal {
   overflow-x: hidden;
   overflow-y: auto;
+  padding-right: 0 !important
 }
 
 .modal-dialog {

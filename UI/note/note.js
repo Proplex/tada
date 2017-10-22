@@ -130,131 +130,295 @@ $.fn.extend({
 });
 /*----------------------------------Variables----------------------------------*/
 var noteZindex = 1;
-var IDarray = []; // keep track of which note is present and which is deleted
-var checkID = []; 
+var noteCounter = 0;
+var posX = [184, 184, 184, 402, 402, 402];
+var posY = [144, 334, 525, 144, 334, 525];
+
+// var IDarray = []; // keep track of which note is present and which is deleted
+// var checkID = []; 
 /*----------------------------------Delete Note----------------------------------*/
 function deleteNote(){
-    $(this).parents('.note').remove(); // remove the note on click of corresponding x button
-        
-    var deleteID = $(this).parents('.note')[0].id; // == get 'noteID' + ID.toString() of deleted note
-    var index = IDarray.indexOf(deleteID); // get index of deleted note's ID
-    if (index > -1) {
-        IDarray.splice(index, 1); // remove the deleted note's ID from the ID array
+    console.log('----------------Deleting notes----------------');    
+    var deleteID = $(this).parents('.note')[0].id; // == get ID.toString() of deleted note
+
+    if(deleteID != '0'){
+        var toSend = {"_id" : deleteID};
+        $.ajax({
+          url: 'https://ubcse442tada.com/delete_note',
+          type: "post",
+          data: JSON.stringify(toSend),
+          dataType: "json",
+          contentType: "application/json",
+          success: function(response) {
+              if ('success' in response) {	
+                //   $('#calendar_full').fullCalendar('removeEvents', eventID, true);
+              }
+              else if ('error' in response) {
+                  console.log(response['error'])
+              }
+          },
+          error: function(response) {
+            console.log(response);
+          },
+        });
     }
-        
-    console.log('Deleted ID: ' + $(this).parents('.note')[0].id); // print out the deleted ID                        
-    console.log('ID array: ' + IDarray); // print out current ID array
+    
+    noteCounter = noteCounter - 1;
+    console.log('note count: ', noteCounter);    
+    $(this).parents('.note').remove(); // remove the note on click of corresponding x button
+    
+    // var index = IDarray.indexOf(deleteID); // get index of deleted note's ID
+    // if (index > -1) {
+    //     IDarray.splice(index, 1); // remove the deleted note's ID from the ID array
+    // }
+    // console.log('Deleted ID: ' + $(this).parents('.note')[0].id); // print out the deleted ID                        
+    // console.log('ID array: ' + IDarray); // print out current ID array
 };
 /*----------------------------------Load Note----------------------------------*/
-function loadNote(title, content, ID) {
+function loadNote(title, content, ID, Xaxis, Yaxis) {
+    
     ID = parseInt(ID); // convert ID from string to int
-    var noteTemp =  '<div class="note" id="noteID' + ID.toString() + '">'
+    Xaxis = Xaxis-190;
+    Yaxis = Yaxis-130;
+    var noteTemp =  '<div class="note" id="' + ID.toString() + '" style="position: absolute; left:' +Xaxis+ '; top:' +Yaxis+ '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
-                        + 	'<div class="note_cnt" id="note_cntID' + ID.toString() + '">'
-                        +		'<textarea class="title" id="titleID' + ID.toString() + '" placeholder="Testing title">'+title+'</textarea>'
-                        + 		'<textarea class="cnt" id="textID' + ID.toString() + '" placeholder="Testing description">'+content+'</textarea>'
+                        // +'<a href="javascript:;" class="button save">S</a>'
+                        +'<a href="javascript:;" class="button edit">E</a>'                                                
+                        + 	'<div class="note_cnt">'
+                        +		'<textarea class="title" placeholder="Testing title">'+title+'</textarea>'
+                        + 		'<textarea class="cnt" placeholder="Testing description">'+content+'</textarea>'
                         +	'</div> '
                         +'</div>';
 
-    IDarray.push('noteID' + ID.toString()); // push the added note's ID into the ID array
-    console.log('ID array: ' + IDarray); // print out current ID array
-    checkID.push(ID.toString());
+    // IDarray.push(ID.toString()); // push the added note's ID into the ID array
+    // console.log('ID array: ' + IDarray); // print out current ID array
+    // checkID.push(ID.toString());
 
     $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function(){
             $(this).zIndex(++noteZindex);
         }); // show the loaded note to the UI
     
-    $('.remove').click(deleteNote); // onclick of delete button, trigger the deleteNote function
+    noteCounter = noteCounter + 1;
+    $('.remove').unbind().click(deleteNote); // onclick of delete button, trigger the deleteNote function
+    // $('.save').click(saveNote);    
+    $('.edit').click(editNote);            
     $('textarea').autogrow(); // text area grows automatically       
     $('.note')
     return false; 
 };
 /*----------------------------------New Note----------------------------------*/
 function newNote() {
+        // var arrayLength = IDarray.length;
+        // if(arrayLength < 4){
+        // var ID = Math.floor((Math.random() * 1000) + 1); // random number between 1 and 1000
+        var ID = 0;
+        var Xaxis, Yaxis;
+        console.log('note count: ',noteCounter);
+        if(noteCounter >= 6){
+            Xaxis = posX[5];
+            Yaxis = posY[5];
+        }
+        else{
+            Xaxis = posX[noteCounter];            
+            Yaxis = posY[noteCounter];
+        }
 
-    var arrayLength = IDarray.length;
+        Xaxis = Xaxis-190;
+        Yaxis = Yaxis-130;
 
-    if(arrayLength < 3){
-
-        var ID = Math.floor((Math.random() * 1000) + 1); // random number between 1 and 1000
-        
-        var noteTemp =  '<div class="note" id="noteID' + ID.toString() + '">'
+        var noteTemp =  '<div class="note" id="' + ID.toString() + '" style="position: absolute; left:' + Xaxis + '; top:' + Yaxis + '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
-                        + 	'<div class="note_cnt" id="note_cntID' + ID.toString() + '">'
-                        +		'<textarea class="title" id="titleID' + ID.toString() + '" placeholder="Enter note title"></textarea>'
-                        + 		'<textarea class="cnt" id="textID' + ID.toString() + '" placeholder="Enter note description"></textarea>'
+                        +'<a href="javascript:;" class="button save">S</a>'
+                        // +'<a href="javascript:;" class="button edit">E</a>'                                                
+                        + 	'<div class="note_cnt">'
+                        +		'<textarea class="title" placeholder="Enter note title"></textarea>'
+                        + 		'<textarea class="cnt" placeholder="Enter note description"></textarea>'
                         +	'</div> '
                         +'</div>';
 
-        IDarray.push('noteID' + ID.toString()); // push the added note's ID into the ID array
-        console.log('ID array: ' + IDarray); // print out current ID array
+        // IDarray.push(ID.toString()); // push the added note's ID into the ID array
+        // console.log('ID array: ' + IDarray); // print out current ID array
                         
         $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
             function(){
                 $(this).zIndex(++noteZindex);
             }); // show the new note to the UI
-            
-        $('.remove').click(deleteNote); // onclick of delete button, trigger the deleteNote function
+
+        console.log($(noteTemp)[0]);
+        //position the note according to the array
+       
+        // $(noteTemp).style.position = "absolute";
+        // $(noteTemp).style.left =  +'px';
+        // $(noteTemp).style.top =  +'px';
+
+        noteCounter = noteCounter + 1;            
+        $('.remove').unbind().click(deleteNote); // onclick of delete button, trigger the deleteNote function
+        $('.save').unbind().click(saveNote);
+        // $('.edit').click(editNote); 
         $('textarea').autogrow(); // text area grows automatically              
         $('.note')
         return false; 
+    // }
+};
+/*----------------------------------Get Position----------------------------------*/
+function getOffset(el) {
+    el = el.getBoundingClientRect();
+    return {
+      left: el.left + window.scrollX,
+      top: el.top + window.scrollY
     }
-};
+  }
+/*----------------------------------Edit Note----------------------------------*/
+function editNote() {
+    console.log('----------------Editing notes----------------');
+    var eTitle = $(this).parents('.note').children('.note_cnt').children('.title')[0].value; 
+    var eText = $(this).parents('.note').children('.note_cnt').children('.cnt')[0].value; 
+    var eX = getOffset($(this)[0]).left;
+    var eY = getOffset($(this)[0]).top;
+    var eID = $(this).parents('.note')[0].id
+   
+    console.log('Title: ', eTitle);
+    console.log('Text: ', eText);
+    console.log('Positions: ', eX,eY);
+    console.log('ID: ', eID);
+    
+    var toSend = {"username": username, "title": eTitle, "_id" : eID, "noteList" : [{"text" : eText}], "x": eX, "y": eY, "color" : "#ffffff"};                
+    $.ajax({
+      url: 'https://ubcse442tada.com/edit_note',
+      type: "post",
+      data: JSON.stringify(toSend),
+      dataType: "json",
+      contentType: "application/json",
+      success: function(response) {
+	
+	      if ('success' in response) {	
+		    //   $('#calendar_full').fullCalendar('updateEvent', event);
+	      }
+	      else if ('error' in response) {
+		      console.log(response['error'])
+	      }
+      },
+      error: function(response) {
+        console.log(response);
+      },
+    });
+  }
 /*----------------------------------Save Note----------------------------------*/
-function saveNote() {
-    console.log('Saving notes...');
+function saveNote(){
+    console.log('----------------Saving notes----------------');
+    try{
+    var eTitle = $(this).parents('.note').children('.note_cnt').children('.title')[0].value; 
+    var eText = $(this).parents('.note').children('.note_cnt').children('.cnt')[0].value; 
+    var ID = $(this).parents('.note')[0].id;    
+    }catch(e){
+        if(e){
+            var eTitle = '';
+            var eText = '';
+            var ID = '0';
+        }
+    }
+    var eX = getOffset($(this)[0]).left;
+    var eY = getOffset($(this)[0]).top;
+    var $this = $(this);
+    
+    console.log('Title: ', eTitle);
+    console.log('Text: ', eText);
+    console.log('Positions: ', eX,eY);
+    console.log('ID: ', ID);
 
-    // get all textarea ID for title named as titleID + number
-    var IDtitles = $('textarea[id^="titleID"]').filter(
-        function(){
-            return this.id.match(/\d+$/);
-        });
+    // // testing
+    // var prevID = $(this).parents('.note')[0].id; // == get 'noteID' + ID.toString() of deleted note
+    // console.log('old ID: ',prevID);
+    // var ID = '1234'
+    // var $this = $(this);
+    // $this.parent().attr("id",ID);
+    // var newID = $(this).parents('.note')[0].id; 
+    // console.log('new ID: ',newID)
 
-    // get all textarea ID for text named as textID + number
-    var IDtexts = $('textarea[id^="textID"]').filter(
-        function(){
-           return this.id.match(/\d+$/);
-        });
-        
-    for(var i = 0; i< IDtitles.length; i++){
-        var checksum = 0;
-
-        var tempTitle = IDtitles[i].id; // id of title of each note
-        var tempText = IDtexts[i].id; // id of text of each note
-
-        // console.log('Saved titleID: ' + tempTitle); 
-        // console.log('Saved textID: ' + tempText);
-            
-        var eTitle = document.getElementById(tempTitle).value; // get the value inside of the textarea.title of each note
-        var eText = document.getElementById(tempText).value; // get the value inside of the textarea.text of each note
-        var eID = tempTitle.replace('titleID',''); // extract only the ID string from the string of titleID (for loadNote)
-                
-        console.log('Saved ID: ' + eID);           
-        console.log('Saved title: ' + eTitle);
-        console.log('Saved text: ' + eText);
-
-        
-        for(var j = 0; j < checkID.length; j++){
-            if(checkID[j] == eID){
-                checksum = 1; // don't send the data to dabase since it already exists
+    var toSend = {"username": username, "title": eTitle, "noteList" : [{"text" : eText}], "x": eX, "y": eY, "color" : "#ffffff"};            
+    $.ajax({
+        url: 'https://ubcse442tada.com/add_note',
+        type: "post",
+        data: JSON.stringify(toSend),
+        dataType: "json",
+        contentType: "application/json",
+        // want to put condition : if ID already exist, dont update the ID.
+        success: function(response) {
+  
+            if ('success' in response) {
+                console.log('Backend calculated: ', response['_id'])
+                var ID = response['_id'];
+                $this.parent().attr("id", ID);
+                console.log('Assigned ID: ', $(this).parents('.note')[0].id);  // update the ID in the attribute
             }
-        }
+            else if ('error' in response) {
+                console.log(response['error'])
+            }
+        },
+        error: function(response) {
+          console.log(response);
+        },
+      });
 
-        if(checksum == 0){
-            var toSend = {"username": username, "title": eTitle, "noteList" : [{"text" : eText}, {"text" : " "}], "x": 0, "y": 0, "noteID": eID, "color" : "#ffffff"};            
-            // var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "noteID": eID}
-            $.ajax({
-                url: 'http://localhost:5000/add',
-                type: "post",
-                data: JSON.stringify(toSend),
-                dataType: "json",
-                contentType: "application/json",
-                success: function() {
-                // If the JSON object was sent successfully, alert that notes are saved...
-                console.log('Successfully saved the notes');
-                }   
-            });
-        }
-    } 
+    var stringEdit = '<a href="javascript:;" class="button edit">E</a>' // edit button string
+    $(this).parents('.note').append(stringEdit); // append edit button to the note.
+    $('.edit').click(editNote); // enable edit functionality onclick of edit button
+    $(this).remove(); // remove the save button 
 };
+// function saveNotes() {
+//     console.log('Saving notes...');
+
+//     // get all textarea ID for title named as titleID + number
+//     var IDtitles = $('textarea[id^="titleID"]').filter(
+//         function(){
+//             return this.id.match(/\d+$/);
+//         });
+
+//     // get all textarea ID for text named as textID + number
+//     var IDtexts = $('textarea[id^="textID"]').filter(
+//         function(){
+//            return this.id.match(/\d+$/);
+//         });
+        
+//     for(var i = 0; i< IDtitles.length; i++){
+//         var checksum = 0;
+
+//         var tempTitle = IDtitles[i].id; // id of title of each note
+//         var tempText = IDtexts[i].id; // id of text of each note
+
+//         // console.log('Saved titleID: ' + tempTitle); 
+//         // console.log('Saved textID: ' + tempText);
+            
+//         var eTitle = document.getElementById(tempTitle).value; // get the value inside of the textarea.title of each note
+//         var eText = document.getElementById(tempText).value; // get the value inside of the textarea.text of each note
+//         var eID = tempTitle.replace('titleID',''); // extract only the ID string from the string of titleID (for loadNote)
+                
+//         console.log('Saved ID: ' + eID);           
+//         console.log('Saved title: ' + eTitle);
+//         console.log('Saved text: ' + eText);
+
+        
+//         for(var j = 0; j < checkID.length; j++){
+//             if(checkID[j] == eID){
+//                 checksum = 1; // don't send the data to dabase since it already exists
+//             }
+//         }
+
+//         if(checksum == 0){
+//             var toSend = {"username": username, "title": eTitle, "noteList" : [{"text" : eText}, {"text" : " "}], "x": 0, "y": 0, "noteID": eID, "color" : "#ffffff"};            
+//             // var toSend = {"type":"note","username":username,"title": eTitle, "text": eText, "x": 0, "y": 0, "noteID": eID}
+//             $.ajax({
+//                 url: 'http://localhost:5000/add',
+//                 type: "post",
+//                 data: JSON.stringify(toSend),
+//                 dataType: "json",
+//                 contentType: "application/json",
+//                 success: function() {
+//                 // If the JSON object was sent successfully, alert that notes are saved...
+//                 console.log('Successfully saved the notes');
+//                 }   
+//             });
+//         }
+//     } 
+// };

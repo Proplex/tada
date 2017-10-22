@@ -3,10 +3,15 @@ from flask_assets import Environment, Bundle
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 
+
+
+
 app = Flask(__name__,
             template_folder='/var/www/html/tada/UI',
             static_folder='/var/www/html/tada/UI')
+
 application = app
+
 assets = Environment(app)
 
 js = Bundle('fullcalendar/lib/moment.min.js',
@@ -34,27 +39,42 @@ assets.register('css',css)
 
 mongo = PyMongo(app)
 
+
+
+
+# support method used to return success to front end
 def success(message, _id):
     return jsonify({'success': message, '_id': _id})
 
+
+
+
+# support method used to return error to front end
 def error(message):
     return jsonify({'error':message})
 
+
+
+
+# home page
 @app.route('/')
 def root():
 	return render_template('index.html')
 
 
+
+
+# add note to database, see setup_mongo.js for example JSON
 @app.route('/add_note',methods=['POST'])
 def add_note(): 
-    json_str  = request.get_json() # gets json sent from frontend
+    json_str  = request.get_json()
     json_dict = dict(json_str)    
     
     _id = str(ObjectId())
     json_dict['_id'] = _id
 
     try:	
-        mongo.db.notes.insert_one(json_dict) #try to put json in db
+        mongo.db.notes.insert_one(json_dict)
     except Exception as e:
         print(e)
         return error(e)
@@ -63,9 +83,11 @@ def add_note():
 
 
 
+
+# add event to database
 @app.route('/add_event',methods=['POST'])
 def add_event():
-    json_str  = request.get_json() # gets json sent from frontend
+    json_str  = request.get_json()
     json_dict = dict(json_str)
     
     _id = str(ObjectId())
@@ -74,7 +96,7 @@ def add_event():
     print(json_dict)
 
     try:	
-        mongo.db.events.insert_one(json_str) #try to put json in db
+        mongo.db.events.insert_one(json_str)
     except Exception as e:
         print(e)
         return error(e)
@@ -82,15 +104,18 @@ def add_event():
     return success('add event succeeded', _id)
 
 
+
+
+# delete note by _id from database
 @app.route('/delete_note',methods=['POST'])
 def delete_note():
     json_str  = request.get_json()
-    print(json_str)	# get json of note function was called on
+    print(json_str)
     json_dict = dict(json_str)    
 
     try:	
-        _id = json_dict['_id'] #get its note ID (unique)
-        mongo.db.notes.remove({'_id': ObjectId(_id)}) #delete note by its unique ID
+        _id = json_dict['_id']
+        mongo.db.notes.remove({'_id': ObjectId(_id)})
     except Exception as e:
         print(e)
         return error(e)
@@ -98,6 +123,9 @@ def delete_note():
     return success('delete note succeeded','')
 
 
+
+
+# delete note by _id from database
 @app.route('/delete_event',methods=['POST'])
 def delete_event():
     json_str  = request.get_json()
@@ -105,8 +133,8 @@ def delete_event():
     json_dict = dict(json_str)    
 
     try:	
-        _id = json_dict['_id'] #grab unique id
-        mongo.db.events.remove({'_id': ObjectId(_id)}) #delete by it
+        _id = json_dict['_id']
+        mongo.db.events.remove({'_id': ObjectId(_id)})
     except Exception as e:
         print(e)
         return error(e)
@@ -114,6 +142,9 @@ def delete_event():
     return success('delete event succeeded','')
 
 
+
+
+# edit note by _id in database
 @app.route('/edit_note',methods=['POST'])
 def edit_note():
     json_str  = request.get_json()
@@ -121,8 +152,9 @@ def edit_note():
     json_dict = dict(json_str)
 
     try:
-        _id = json_dict['_id'] #grab unique id
-        mongo.db.notes.update_one({'_id': ObjectId(_id)}, json_dict) #update entry
+        _id = json_dict['_id']
+        del json_dict['_id']
+        mongo.db.notes.update_one({'_id': ObjectId(_id)}, {'$set':json_dict})
     except Exception as e:
         print(e)
         return error(e)
@@ -132,6 +164,7 @@ def edit_note():
 
 
 
+# edit event by _id in database
 @app.route('/edit_event',methods=['POST'])
 def edit_event():
     json_str  = request.get_json()
@@ -139,8 +172,9 @@ def edit_event():
     json_dict = dict(json_str)
 
     try:	
-        _id = json_dict['_id'] #grab unique
-        mongo.db.events.update_one({'_id': ObjectId(_id)}, json_dict) #update by it
+        _id = json_dict['_id']
+        del json_dict['_id']
+        mongo.db.events.update_one({'_id': ObjectId(_id)}, {'$set':json_dict})
     except Exception as e:
         print(e)
         return error(e)
@@ -148,13 +182,16 @@ def edit_event():
     return success('update event succeeded','')
 
 
+
+
+# return a user's notes and events
 @app.route('/login',methods=['POST'])
 def login():
     json_str  = request.get_json()
     print(json_str)	
     json_dict = dict(json_str)
 
-    username = json_dict['username'] #get username from login
+    username = json_dict['username']
     
     notes = [note for note in mongo.db.notes .find({"username": username})]
     for note in notes:
@@ -164,7 +201,10 @@ def login():
     for event in events:
         event['_id'] = str(event['_id'])    
     
-    return jsonify({"notes": notes, "events": events}) #Send em all over in one big json
+    return jsonify({"notes": notes, "events": events})
+
+
+
 
 if __name__ == '__main__':
     app.run()

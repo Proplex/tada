@@ -1,8 +1,5 @@
 
-// shell command to run
-// mongo localhost:27017/tada_mongo setup_mongo.js
-
-db.users.save({"username":"testuser"});
+// db will be called "tada" based on app name
 
 db.notes.save({    
     "username":"testuser",
@@ -16,6 +13,7 @@ db.notes.save({
     "noteID":0,
     "color": "#ffffff"
 });
+
 
 db.events.save({
     "username":"testuser",

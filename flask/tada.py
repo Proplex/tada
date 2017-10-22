@@ -90,12 +90,12 @@ def delete_note():
 
     try:	
         _id = json_dict['_id'] #get its note ID (unique)
-        mongo.db.notes.delete_many({'_id': ObjectId(_id)}) #delete note by its unique ID
+        mongo.db.notes.remove({'_id': ObjectId(_id)}) #delete note by its unique ID
     except Exception as e:
         print(e)
         return error(e)
 
-    return success('delete note succeeded')
+    return success('delete note succeeded','')
 
 
 @app.route('/delete_event',methods=['POST'])
@@ -106,12 +106,12 @@ def delete_event():
 
     try:	
         _id = json_dict['_id'] #grab unique id
-        mongo.db.notes.delete_many({'_id': _id}) #delete by it
+        mongo.db.events.remove({'_id': ObjectId(_id)}) #delete by it
     except Exception as e:
         print(e)
         return error(e)
 
-    return success('delete event succeeded')
+    return success('delete event succeeded','')
 
 
 @app.route('/edit_note',methods=['POST'])
@@ -122,12 +122,12 @@ def edit_note():
 
     try:
         _id = json_dict['_id'] #grab unique id
-        mongo.db.notes.update_one({"noteID": noteID}, json_str) #update entry
+        mongo.db.notes.update_one({'_id': ObjectId(_id)}, json_dict) #update entry
     except Exception as e:
         print(e)
         return error(e)
 
-    return success('update note succeeded')
+    return success('update note succeeded','')
 
 
 
@@ -139,13 +139,13 @@ def edit_event():
     json_dict = dict(json_str)
 
     try:	
-        eventID = request['eventID'] #grab unique
-        mongo.db.notes.update_one({"eventID": eventID}, json_str) #update by it
+        _id = json_dict['_id'] #grab unique
+        mongo.db.events.update_one({'_id': ObjectId(_id)}, json_dict) #update by it
     except Exception as e:
         print(e)
         return error(e)
 
-    return success('update event succeeded')
+    return success('update event succeeded','')
 
 
 @app.route('/login',methods=['POST'])

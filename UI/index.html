@@ -166,7 +166,7 @@
 
   // Function called when Delete button in the Add New Event modal is pressed (Only applicable when existing event is clicked)
   function deleteEvent(eventID) {
-    
+    console.log(eventID);
     var toSend = {"_id" : eventID};
     $.ajax({
       url: 'https://ubcse442tada.com/delete_event',
@@ -208,7 +208,7 @@
         var eventData = [];
         for (i = 0; i < userData['events'].length; i++) {
           for (j = 0; j < userData.events[i].eventList.length; j++) {
-            eventData.push({'id' : userData.events[i]._id, 'title' : userData.events[i].title, 'start' : userData.events[i].eventList[j].start, 'end' : userData.events[i].eventList[j].start});	
+            eventData.push({'id' : userData.events[i]._id, 'title' : userData.events[i].title, 'start' : userData.events[i].eventList[j].start, 'end' : userData.events[i].eventList[j].end});	
           }
         }
         createCalendar(eventData);

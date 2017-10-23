@@ -86,6 +86,7 @@ def send_font(filename):
 @app.route('/add_note',methods=['POST'])
 def add_note(): 
     json_str  = request.get_json()
+    print(json_str)
     json_dict = dict(json_str)    
     
     _id = str(ObjectId())
@@ -106,6 +107,7 @@ def add_note():
 @app.route('/add_event',methods=['POST'])
 def add_event():
     json_str  = request.get_json()
+    print(json_str)
     json_dict = dict(json_str)
     
     _id = str(ObjectId())
@@ -114,7 +116,7 @@ def add_event():
     print(json_dict)
 
     try:	
-        mongo.db.events.insert_one(json_str)
+        mongo.db.events.insert_one(json_dict)
     except Exception as e:
         print(e)
         return error(e)
@@ -133,7 +135,7 @@ def delete_note():
 
     try:	
         _id = json_dict['_id']
-        mongo.db.notes.remove({'_id': ObjectId(_id)})
+        print((mongo.db.notes.delete_one({'_id': _id})).deleted_count)
     except Exception as e:
         print(e)
         return error(e)
@@ -143,7 +145,7 @@ def delete_note():
 
 
 
-# delete note by _id from database
+# delete event by _id from database
 @app.route('/delete_event',methods=['POST'])
 def delete_event():
     json_str  = request.get_json()
@@ -152,7 +154,7 @@ def delete_event():
 
     try:	
         _id = json_dict['_id']
-        mongo.db.events.remove({'_id': ObjectId(_id)})
+        print((mongo.db.events.delete_one({'_id': _id})).deleted_count)
     except Exception as e:
         print(e)
         return error(e)
@@ -172,7 +174,7 @@ def edit_note():
     try:
         _id = json_dict['_id']
         del json_dict['_id']
-        mongo.db.notes.update_one({'_id': ObjectId(_id)}, {'$set':json_dict})
+        mongo.db.notes.update_one({'_id': _id}, {'$set':json_dict})
     except Exception as e:
         print(e)
         return error(e)
@@ -192,7 +194,7 @@ def edit_event():
     try:	
         _id = json_dict['_id']
         del json_dict['_id']
-        mongo.db.events.update_one({'_id': ObjectId(_id)}, {'$set':json_dict})
+        mongo.db.events.update_one({'_id': _id}, {'$set':json_dict})
     except Exception as e:
         print(e)
         return error(e)

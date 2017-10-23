@@ -140,6 +140,8 @@ var posY = [144, 334, 525, 144, 334, 525];
 function deleteNote(){
     console.log('----------------Deleting notes----------------');    
     var deleteID = $(this).parents('.note')[0].id; // == get ID.toString() of deleted note
+    
+    console.log(deleteID);
 
     if(deleteID != '0'){
         var toSend = {"_id" : deleteID};
@@ -151,7 +153,7 @@ function deleteNote(){
           contentType: "application/json",
           success: function(response) {
               if ('success' in response) {	
-                //   $('#calendar_full').fullCalendar('removeEvents', eventID, true);
+                console.log(response['success'])
               }
               else if ('error' in response) {
                   console.log(response['error'])
@@ -177,16 +179,16 @@ function deleteNote(){
 /*----------------------------------Load Note----------------------------------*/
 function loadNote(title, content, ID, Xaxis, Yaxis) {
     
-    ID = parseInt(ID); // convert ID from string to int
+
     Xaxis = Xaxis-190;
     Yaxis = Yaxis-130;
-    var noteTemp =  '<div class="note" id="' + ID.toString() + '" style="position: absolute; left:' +Xaxis+ '; top:' +Yaxis+ '">'
+    var noteTemp =  '<div class="note" id="' + ID + '" style="position: absolute; left:' +Xaxis+ '; top:' +Yaxis+ '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
                         // +'<a href="javascript:;" class="button save">S</a>'
                         +'<a href="javascript:;" class="button edit">E</a>'                                                
                         + 	'<div class="note_cnt">'
                         +		'<textarea class="title" placeholder="Testing title">'+title+'</textarea>'
-                        + 		'<textarea class="cnt" placeholder="Testing description">'+content+'</textarea>'
+                        + 		'<textarea class="cnt" placeholder="Testing description">'+content+'</textarea>' 
                         +	'</div> '
                         +'</div>';
 
@@ -325,7 +327,14 @@ function saveNote(){
     console.log('Title: ', eTitle);
     console.log('Text: ', eText);
     console.log('Positions: ', eX,eY);
-    console.log('ID: ', ID);
+    
+
+    
+    var testID = "1";
+    $this.parent().attr("id", testID);
+    
+ 
+//    console.log('ID: ', ID);
 
     // // testing
     // var prevID = $(this).parents('.note')[0].id; // == get 'noteID' + ID.toString() of deleted note
@@ -347,10 +356,11 @@ function saveNote(){
         success: function(response) {
   
             if ('success' in response) {
-                console.log('Backend calculated: ', response['_id'])
-                var ID = response['_id'];
-                $this.parent().attr("id", ID);
-                console.log('Assigned ID: ', $(this).parents('.note')[0].id);  // update the ID in the attribute
+
+                newID = response['_id'];
+                console.log('assigned ID: ',newID);
+                document.getElementById("1").id = newID;
+                console.log(document.getElementById(newID));
             }
             else if ('error' in response) {
                 console.log(response['error'])

@@ -21,18 +21,18 @@
 
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+<!--<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">-->
 
 <script type="text/javascript">
   $(document).ready(function() {
   	$("#board").height($(document).height());
-	  $("#add_new").click(newNote);  
+	  $("#add_new").click(newNote);
     $("#save_note").click(saveNote);
     $('#startTimeCalendar').datetimepicker();
     $('#endTimeCalendar').datetimepicker();
   });
 
-  function validateForm() {    
+  function validateForm() {
     var eventTitle = document.getElementById("eventTitle").value;
     var startTime = document.getElementById("startTimeCalendar").value;
     var endTime = document.getElementById("endTimeCalendar").value;
@@ -93,7 +93,7 @@
       },
       height: 600, // would like to change this to parent
       fixedWeekCount: false
-    });   
+    });
   }
 
   var username;
@@ -104,7 +104,7 @@
     var titleOfNewEvent = document.getElementById("eventTitle").value;
     var startDateOfNewEvent = document.getElementById("startTimeCalendar").value;
     var endDateOfNewEvent = document.getElementById("endTimeCalendar").value;
-    
+
     if (validateForm()) {
       $('#addEventModal').modal('toggle');
         var toSend = {"username": username, "title": titleOfNewEvent, "eventList" : [{"start" : startDateOfNewEvent, "end" : endDateOfNewEvent}], "color" : "#ffffff"};
@@ -115,10 +115,10 @@
           dataType: "json",
           contentType: "application/json",
           success: function(response) {
-	
+
 	          if ('success' in response) {
               console.log(response['_id'])
-              var newElement = {id : response['_id'], title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};	
+              var newElement = {id : response['_id'], title : titleOfNewEvent, start : startDateOfNewEvent, end : endDateOfNewEvent};
 		          $('#calendar_full').fullCalendar('renderEvent', newElement , true);
 	          }
 	          else if ('error' in response) {
@@ -141,7 +141,7 @@
       $('#addEventModal').modal('toggle');
       $('#calendar_full').fullCalendar('updateEvent', event);
     }
-    
+
     var toSend = {"username": username, "title": event.title, "_id" : event.id, "eventList" : [{"start" : event.start, "end" : event.end}], "color" : "#ffffff"};
     $.ajax({
       url: 'https://ubcse442tada.com/edit_event',
@@ -150,8 +150,8 @@
       dataType: "json",
       contentType: "application/json",
       success: function(response) {
-	
-	      if ('success' in response) {	
+
+	      if ('success' in response) {
 		      $('#calendar_full').fullCalendar('updateEvent', event);
 	      }
 	      else if ('error' in response) {
@@ -166,7 +166,7 @@
 
   // Function called when Delete button in the Add New Event modal is pressed (Only applicable when existing event is clicked)
   function deleteEvent(eventID) {
-    
+
 
     console.log(eventID);
     var toSend = {"_id" : eventID};
@@ -177,8 +177,8 @@
       dataType: "json",
       contentType: "application/json",
       success: function(response) {
-	
-	      if ('success' in response) {	
+
+	      if ('success' in response) {
               console.log(eventID);
 		      $('#calendar_full').fullCalendar('removeEvents', eventID, true);
 	      }
@@ -208,10 +208,23 @@
         document.getElementById("noteCalendarDivision").style.display = "";
         document.getElementById("startupPage").style.display = "none";
 
+        $('body').css({'overflow':'hidden'});
+        $(document).bind('scroll',function () {
+          window.scrollTo(0,0);
+        });
+
+        // document.getElementById("next1").style.display = "none";
+        // document.getElementById("next2").style.display = "none";
+        // document.getElementById("next3").style.display = "none";
+        // document.getElementById("next4").style.display = "none";
+        // document.getElementById("next5").style.display = "none";
+        // document.getElementById("next6").style.display = "none";
+        // document.getElementById("next7").style.display = "none";
+
         var eventData = [];
         for (i = 0; i < userData['events'].length; i++) {
           for (j = 0; j < userData.events[i].eventList.length; j++) {
-            eventData.push({'id' : userData.events[i]._id, 'title' : userData.events[i].title, 'start' : userData.events[i].eventList[j].start, 'end' : userData.events[i].eventList[j].end});	
+            eventData.push({'id' : userData.events[i]._id, 'title' : userData.events[i].title, 'start' : userData.events[i].eventList[j].start, 'end' : userData.events[i].eventList[j].end});
           }
         }
         createCalendar(eventData);
@@ -242,15 +255,15 @@
     });
   }
 
-</script> 
+</script>
 </head>
 
 <body>
-  <!-- Upon visiting TaDa page, user will be greeted with a start up page to login with Google -->
+
   <div id = "startupPage" class="text-center">
-    
+
         <!-- Header -->
-    <header class="intro-header">
+    <header class="intro-header" id="next1">
       <div class="container">
         <div class="intro-message">
           <h1>TaDa</h1>
@@ -260,24 +273,24 @@
             <li class="list-inline-item">
               <!--<a href="#" class="btn btn-secondary btn-lg">-->
                 <!--<i class="fa fa-google fa-fw"></i>-->
-                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <div class="g-signin2" data-onsuccess="onSignIn" style="height: 50px; width: 180px;"></div>
                 <!-- <span class="network-name">Sign-In</span> -->
                 <!--<span class="network-name">Sign-In</span>-->
               <!--</a>-->
             </li>
-            <li class="list-inline-item">
+            <!--<li class="list-inline-item">
               <a href="https://github.com/CosmicVarion/tada" class="btn btn-secondary btn-lg">
                 <i class="fa fa-github fa-fw"></i>
                 <span class="network-name">Github</span>
               </a>
-            </li>
+            </li>-->
           </ul>
         </div>
       </div>
     </header>
 
     <!-- Page Content -->
-    <section class="content-section-a">
+    <section class="content-section-a" id="next2">
 
       <div class="container">
         <div class="row">
@@ -286,10 +299,10 @@
             <div class="clearfix"></div>
             <h2 class="section-heading">TaDa Application</h2>
             <p class="lead">
-              Web application that is a clone of Trello and Google Calendar. 
-              On the left, you can create notes. 
+              Web application that is a clone of Trello and Google Calendar.
+              On the left, you can create notes.
               On the right, you can add events to a calendar.
-            </p> 
+            </p>
           </div>
           <div class="col-lg-5 mr-auto">
             <img class="img-fluid" src="https://ubcse442tada.com/img/UI.png" alt="">
@@ -300,23 +313,22 @@
       <!-- /.container -->
     </section>
 
-    <section class="content-section-b">
+    <section class="content-section-a" id="next3">
 
       <div class="container">
-
         <div class="row">
-          <div class="col-lg-5 mr-auto order-lg-2">
+          <div class="col-lg-5 ml-auto">
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
             <h2 class="section-heading">Sign-In</h2>
             <p class="lead">
               To sign-in, click the Sign-In button that will allow you to access the application with Google account.
-              Upon login, you will be greeted with the TaDa page. From here, you will be able to create notes and calendar events.
+              Upon login, you will be able to create notes and calendar events.
               When you re-enter the application after the log-out, the saved notes and events from the web server database will populate.
             </p>
           </div>
-          <div class="col-lg-5 ml-auto order-lg-1">
-            <img class="img-fluid" src="https://ubcse442tada.com/img/login.png" alt="" width="350">
+          <div class="col-lg-5 mr-auto">
+            <img class="img-fluid" src="https://ubcse442tada.com/img/login.png" alt="" width="250">
           </div>
         </div>
 
@@ -326,7 +338,7 @@
     </section>
     <!-- /.content-section-b -->
 
-    <section class="content-section-a">
+    <section class="content-section-a" id="next4">
 
       <div class="container">
 
@@ -337,7 +349,7 @@
             <h2 class="section-heading">Note</h2>
             <p class="lead">
                 When you create the note, you can write the title and description of the note.
-                Additionally, you can drag the note and post it on the other location. 
+                Additionally, you can drag the note and post it on the other location.
                 Moreover, you are able to delete the note by clicking the upper-right button.
             </p>
           </div>
@@ -352,34 +364,34 @@
     </section>
     <!-- /.content-section-a -->
 
-    <section class="content-section-b">
+    <section class="content-section-a" id="next5">
 
       <div class="container">
 
         <div class="row">
-          <div class="col-lg-5 mr-auto order-lg-2">
+            <div class="col-lg-5 ml-auto">
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
             <h2 class="section-heading">Calendar</h2>
             <p class="lead">
-              When you add the event to calendar, you can write the title, start time, and end time of the event. 
-              Once you click the start and end time, the modal will allow you to choose the date, hour, and minute. 
+              When you add the event to calendar, you can write the title, start time, and end time of the event.
+              Once you click the start and end time, the modal will allow you to choose the date, hour, and minute.
               After saving, the event will appear in the calendar, which is clickable to edit or delete.
             </p>
           </div>
-          <div class="col-lg-5 ml-auto order-lg-1">
+          <div class="col-lg-5 mr-auto ">
             <img class="img-fluid" src="https://ubcse442tada.com/img/calendar.png" alt="">
           </div>
         </div>
 
       </div>
       <!-- /.container -->
-    </section>    
+    </section>
 
-    <section class="content-section-a">
-        
+    <section class="content-section-a" id="next6">
+
               <div class="container">
-        
+
                 <div class="row">
                   <div class="col-lg-5 ml-auto">
                     <hr class="section-heading-spacer">
@@ -393,33 +405,43 @@
                     <img class="img-fluid" src="https://ubcse442tada.com/img/week.png" alt="">
                   </div>
                 </div>
-        
+
               </div>
               <!-- /.container -->
-        
+
             </section>
 
-    <aside class="banner">
+    <aside class="banner" id="next7">
 
       <div class="container">
 
         <div class="row">
-          <div class="col-lg-7 my-auto">
+          <div class="col-lg-6 my-auto">
             <h2>Bug Report</h2>
-            <p class="lead">
+            <!--<p class="lead">
                 1) To report bug, you should click the link on the right, which will take you to the GitHub issues page for TaDa web application. </br>
-                2) Click the New Issue button and insert the title according to the format. Bug Report:  (content). </br>               
+                2) Click the New Issue button and insert the title according to the format. Bug Report:  (content). </br>
                 3) In the description, write the details about the bug that you found. </br>
                 4) On the right, label the issue by clicking the label and bug. </br>
-                5) To finish the submission, click the Submit New Issue button. </br>                
-              </p>   
+                5) To finish the submission, click the Submit New Issue button. </br>
+              </p> -->
+            <br>
+            <ul>
+                <li>To report bug, you should click the link on the right, which will take you to the GitHub issues page for TaDa web application.</li><br>
+                <li>Click the New Issue button and insert the title according to the format. Bug Report:  (content).</li><br>
+                <li>In the description, write the details about the bug that you found.</li><br>
+                <li>On the right, label the issue by clicking the label and bug.</li><br>
+                <li>To finish the submission, click the Submit New Issue button.</li><br>
+              </ul>
+
+
           </div>
-          
-          <div class="col-lg-5 my-auto">
+
+          <div class="col-lg-6 my-auto">
 
             <ul class="list-inline banner-social-buttons">
 
-                 
+
               <li class="list-inline-item">
                 <a href="https://github.com/CosmicVarion/tada/issues" class="btn btn-secondary btn-lg">
                   <i class="fa fa-github fa-fw"></i>
@@ -443,17 +465,14 @@
     <!-- /.banner -->
 
     <!-- Footer -->
-    <footer>
+    <!-- <footer>
       <div class="container">
         <p class="copyright text-muted small">Copyright &copy; TaDa 2017. All Rights Reserved</p>
       </div>
-    </footer>
-
-
-    <!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
-
+    </footer> -->
 
   </div>
+
   <!-- For navbar -->
   <nav id = "navbar" class="navbar navbar-toggleable-md navbar-inverse bg-inverse" style="display:none;">
     <a class="navbar-brand" style="position: relative; position: absolute; left: 50%; margin-left: -50px !important; display: block; font-size: 30px; color: white; font-weight: bold;">TaDa</a>
@@ -522,9 +541,9 @@
             <button type="button" class="btn btn-secondary disabled" data-dismiss="modal" onclick="deleteEvent()" id="deleteModalButton">Delete</button>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
 </body>
-</html> 
+</html>

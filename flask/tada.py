@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_assets import Environment, Bundle
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -24,6 +24,7 @@ js = Bundle('fullcalendar/lib/moment.min.js',
             'layout/scripts/jquery.backtotop.js',
             'layout/scripts/jquery.mobilemenu.js',
             'layout/scripts/jquery.placeholder.min.js',
+            'vendor/popper/popper.min.js',
             output='gen/packed.js')
 assets.register('js',js)
 
@@ -34,6 +35,8 @@ css = Bundle('fullcalendar/fullcalendar.css',
              'layout/styles/bootstrap-datepicker.css',
              'layout/styles/bootstrap-datetimepicker.css',
              'note/note.css',
+             'vendor/font-awesome/css/font-awesome.css',
+             'css/landing-page.css',
              output='gen/packed.css')
 assets.register('css',css)
 
@@ -60,6 +63,21 @@ def error(message):
 @app.route('/')
 def root():
 	return render_template('index.html')
+
+
+
+
+# images
+@app.route('/img/<path:filename>')
+def send_img(filename):
+    return send_from_directory('/var/www/html/tada/UI/img',filename,mimetype='image/png')
+
+
+
+# font resources
+@app.route('/fonts/<path:filename>')
+def send_font(filename):
+    return send_from_directory('/var/www/html/tada/UI/vendor/font-awesome/fonts/',filename)
 
 
 

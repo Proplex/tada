@@ -91,7 +91,7 @@ ul {
 .note {
   float: left;
   display: block;
-  position: relative;
+  /* position: relative; */
   /* left: 4%;    */
   padding: 1em;
   width: 200px;
@@ -214,6 +214,56 @@ ul {
     text-decoration: none;
   }
   .button.remove:hover {
+    background-color:gray;
+    text-decoration: none;
+  }
+  .button.save {
+    position: absolute;
+    top: 35px;
+    right: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    color: #FFFFFF;
+    padding: 1em 2em;
+    background: linear-gradient(top, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.3));
+    background-color: black;
+    text-align: center;
+    line-height: 8px;
+    padding: 9px;
+    border-color: gray;
+    font-style: 1.6em;
+    font-weight: bolder;
+    font-size: 12px;
+    font-family: Helvetica, Arial, sans-serif; 
+    text-decoration: none;
+  }
+  .button.save:hover {
+    background-color:gray;
+    text-decoration: none;
+  }
+  .button.edit {
+    position: absolute;
+    top: 35px;
+    right: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    color: #FFFFFF;
+    padding: 1em 2em;
+    background: linear-gradient(top, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.3));
+    background-color: black;
+    text-align: center;
+    line-height: 8px;
+    padding: 9px;
+    border-color: gray;
+    font-style: 1.6em;
+    font-weight: bolder;
+    font-size: 12px;
+    font-family: Helvetica, Arial, sans-serif; 
+    text-decoration: none;
+  }
+  .button.edit:hover {
     background-color:gray;
     text-decoration: none;
   }

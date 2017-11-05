@@ -164,31 +164,32 @@ function deleteNote(){
           },
         });
     }
-    
+
     noteCounter = noteCounter - 1;
-    console.log('note count: ', noteCounter);    
+    console.log('note count: ', noteCounter);
     $(this).parents('.note').remove(); // remove the note on click of corresponding x button
-    
+
     // var index = IDarray.indexOf(deleteID); // get index of deleted note's ID
     // if (index > -1) {
     //     IDarray.splice(index, 1); // remove the deleted note's ID from the ID array
     // }
-    // console.log('Deleted ID: ' + $(this).parents('.note')[0].id); // print out the deleted ID                        
+    // console.log('Deleted ID: ' + $(this).parents('.note')[0].id); // print out the deleted ID
     // console.log('ID array: ' + IDarray); // print out current ID array
 };
 /*----------------------------------Load Note----------------------------------*/
 function loadNote(title, content, ID, Xaxis, Yaxis) {
-    
+
 
     Xaxis = Xaxis-190;
     Yaxis = Yaxis-130;
     var noteTemp =  '<div class="note" id="' + ID + '" style="position: absolute; left:' +Xaxis+ '; top:' +Yaxis+ '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
                         // +'<a href="javascript:;" class="button save">S</a>'
-                        +'<a href="javascript:;" class="button edit">E</a>'                                                
+                        + '<a href="javascript:;" class="button edit">E</a>'
+                        + '<a href="javascript:;" class="button add">+</a>'
                         + 	'<div class="note_cnt">'
                         +		'<textarea class="title" placeholder="Testing title">'+title+'</textarea>'
-                        + 		'<textarea class="cnt" placeholder="Testing description">'+content+'</textarea>' 
+                        + 		'<textarea class="cnt" placeholder="Testing description">'+content+'</textarea>'
                         +	'</div> '
                         +'</div>';
 
@@ -200,15 +201,42 @@ function loadNote(title, content, ID, Xaxis, Yaxis) {
         function(){
             $(this).zIndex(++noteZindex);
         }); // show the loaded note to the UI
-    
+
     noteCounter = noteCounter + 1;
     $('.remove').unbind().click(deleteNote); // onclick of delete button, trigger the deleteNote function
-    // $('.save').click(saveNote);    
-    $('.edit').click(editNote);            
-    $('textarea').autogrow(); // text area grows automatically       
+    // $('.save').click(saveNote);
+    $('.edit').click(editNote);
+    $('.add').click(addExtraNoteField);
+    $('textarea').autogrow(); // text area grows automatically
     $('.note')
-    return false; 
+    return false;
 };
+
+function addExtraNoteField() {
+  //Create the extra note field and append it to the note the user is interacting with
+  var extranote = document.createElement('textarea');
+  extranote.classList.add('cnt');
+  extranote.placeholder = "Enter note description";
+  $(this).parents('.note').children('.note_cnt')[0].appendChild(extranote);
+  //Grab all note description fields
+  var texts = $(this).parents('.note').children('.note_cnt').children('.cnt');
+  var initial_height = parseInt($(texts[0]).css("height"));
+  //Rather than hardcode the class height of 90px, this is completely agnostic to changes in textarea CSS changes
+  var computed_height = (initial_height * (texts.length - 1)) / texts.length;
+  for (var i = 0; i < texts.length; i++) {
+    //Iterate over all current descriptions and set their height
+    $(texts[i]).css("height", computed_height);
+  }
+  if(texts.length == 4) {
+    $(this).parents('.note').children(".add").remove();
+  }
+}
+
+
+
+
+
+
 /*----------------------------------New Note----------------------------------*/
 function newNote() {
         // var arrayLength = IDarray.length;
@@ -232,7 +260,8 @@ function newNote() {
         var noteTemp =  '<div class="note" id="' + ID.toString() + '" style="position: absolute; left:' + Xaxis + '; top:' + Yaxis + '">'
                         +'<a href="javascript:;" class="button remove">X</a>'
                         +'<a href="javascript:;" class="button save">S</a>'
-                        // +'<a href="javascript:;" class="button edit">E</a>'                                                
+                        +'<a href="javascript:;" class="button add">+</a>'
+                        // +'<a href="javascript:;" class="button edit">E</a>'
                         + 	'<div class="note_cnt">'
                         +		'<textarea class="title" placeholder="Enter note title"></textarea>'
                         + 		'<textarea class="cnt" placeholder="Enter note description"></textarea>'
@@ -249,18 +278,19 @@ function newNote() {
 
         console.log($(noteTemp)[0]);
         //position the note according to the array
-       
+
         // $(noteTemp).style.position = "absolute";
         // $(noteTemp).style.left =  +'px';
         // $(noteTemp).style.top =  +'px';
 
-        noteCounter = noteCounter + 1;            
+        noteCounter = noteCounter + 1;
         $('.remove').unbind().click(deleteNote); // onclick of delete button, trigger the deleteNote function
         $('.save').unbind().click(saveNote);
-        // $('.edit').click(editNote); 
-        $('textarea').autogrow(); // text area grows automatically              
+        $('.add').click(addExtraNoteField);
+        // $('.edit').click(editNote);
+        $('textarea').autogrow(); // text area grows automatically
         $('.note')
-        return false; 
+        return false;
     // }
 };
 /*----------------------------------Get Position----------------------------------*/
